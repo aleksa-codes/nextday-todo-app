@@ -26,43 +26,18 @@ export function TodoList({ listId }: TodoListProps) {
   const [editingTodo, setEditingTodo] = useState<{ id: number; content: string } | null>(null);
   const [selectedTodoForTimer, setSelectedTodoForTimer] = useState<Todo | null>(null);
 
-  // Consolidated API call handler
-  const fetchData = async (
-    url: string,
-    method: string = 'GET',
-    body?: object,
-    successMessage?: string,
-    errorMessage?: string,
-    successToast: boolean = true,
-  ) => {
-    try {
-      const config: RequestInit = {
-        method,
-        headers: body ? { 'Content-Type': 'application/json' } : {},
-        body: body ? JSON.stringify(body) : undefined,
-      };
-
-      const response = await fetch(url, config);
-
-      if (!response.ok) throw new Error('Request failed');
-
-      const data = await response.json();
-
-      if (successMessage && successToast) toast.success(successMessage);
-
-      return data;
-    } catch {
-      toast.error(errorMessage || 'An error occurred');
-      return null;
-    }
-  };
-
   // Fetch todos on component mount
   useEffect(() => {
     const loadTodos = async () => {
-      const data = await fetchData('/api/todos');
-      if (data) {
+      try {
+        const response = await fetch('/api/todos');
+        if (!response.ok) throw new Error('Failed to fetch todos');
+        const data = await response.json();
         setTodos(data.filter((todo: Todo) => todo.listId === listId));
+      } catch (error) {
+        toast.error('Failed to load todos');
+        console.error('Error loading todos:', error);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -74,61 +49,87 @@ export function TodoList({ listId }: TodoListProps) {
     e.preventDefault();
     if (!newTodo.trim()) return;
 
-    const newTodoData = await fetchData(
-      '/api/todos',
-      'POST',
-      { content: newTodo, listId },
-      'Todo created successfully',
-    );
+    try {
+      const response = await fetch('/api/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newTodo, listId }),
+      });
 
-    if (newTodoData) {
-      setTodos((prev) => [...prev, newTodoData]);
+      if (!response.ok) throw new Error('Failed to create todo');
+
+      const newTodoData = await response.json();
+      setTodos(prev => [...prev, newTodoData]);
       setNewTodo('');
+      toast.success('Todo created successfully');
+    } catch (error) {
+      toast.error('Failed to create todo');
+      console.error('Error creating todo:', error);
     }
   };
 
   // Toggle todo completion
   const toggleTodo = useCallback(async (id: number, completed: boolean, showToast = true) => {
     try {
-      const updatedTodo = await fetchData(
-        `/api/todos/${id}`,
-        'PATCH',
-        { completed },
-        `Todo marked as ${completed ? 'completed' : 'incomplete'}`,
-        'Failed to update todo',
-        showToast,
-      );
+      const response = await fetch(`/api/todos/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed }),
+      });
 
-      if (updatedTodo) {
-        setTodos((prev) => prev.map((todo) => (todo.id === id ? { ...todo, ...updatedTodo } : todo)));
+      if (!response.ok) throw new Error('Failed to update todo');
+
+      const updatedTodo = await response.json();
+      setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, ...updatedTodo } : todo));
+      
+      if (showToast) {
+        toast.success(`Todo marked as ${completed ? 'completed' : 'incomplete'}`);
       }
     } catch (error) {
+      if (showToast) {
+        toast.error('Failed to update todo');
+      }
       console.error('Error toggling todo:', error);
-      toast.error('Failed to update todo');
     }
   }, []);
 
   // Delete todo
   const deleteTodo = async (id: number) => {
-    await fetchData(`/api/todos/${id}`, 'DELETE', undefined, 'Todo deleted successfully');
+    try {
+      const response = await fetch(`/api/todos/${id}`, {
+        method: 'DELETE',
+      });
 
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+      if (!response.ok) throw new Error('Failed to delete todo');
+
+      setTodos(prev => prev.filter(todo => todo.id !== id));
+      toast.success('Todo deleted successfully');
+    } catch (error) {
+      toast.error('Failed to delete todo');
+      console.error('Error deleting todo:', error);
+    }
   };
 
   // Update todo content
   const updateTodoContent = async () => {
     if (!editingTodo || !editingTodo.content.trim()) return;
 
-    const updatedTodo = await fetchData(
-      `/api/todos/${editingTodo.id}`,
-      'PATCH',
-      { content: editingTodo.content },
-      'Todo updated successfully',
-    );
+    try {
+      const response = await fetch(`/api/todos/${editingTodo.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: editingTodo.content }),
+      });
 
-    if (updatedTodo) {
-      setTodos((prev) => prev.map((todo) => (todo.id === editingTodo.id ? { ...todo, ...updatedTodo } : todo)));
+      if (!response.ok) throw new Error('Failed to update todo');
+
+      const updatedTodo = await response.json();
+      setTodos(prev => prev.map(todo => todo.id === editingTodo.id ? { ...todo, ...updatedTodo } : todo));
       setEditingTodo(null);
+      toast.success('Todo updated successfully');
+    } catch (error) {
+      toast.error('Failed to update todo');
+      console.error('Error updating todo:', error);
     }
   };
 
@@ -136,10 +137,8 @@ export function TodoList({ listId }: TodoListProps) {
   const handleTimerComplete = useCallback(() => {
     if (selectedTodoForTimer) {
       const todoId = selectedTodoForTimer.id;
-      // Mark todo as completed
       toggleTodo(todoId, true, false)
         .then(() => {
-          // Only clear selection after toggle is successful
           setSelectedTodoForTimer(null);
         })
         .catch(() => {
