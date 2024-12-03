@@ -8,7 +8,7 @@ import { sendEmail } from './email';
 
 export const auth = betterAuth({
   appName: 'NextDay',
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   database: drizzleAdapter(db, {
     provider: 'sqlite',
     schema: {
