@@ -11,9 +11,7 @@ export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   database: drizzleAdapter(db, {
     provider: 'sqlite',
-    schema: {
-      ...schema,
-    },
+    schema: schema,
     usePlural: true,
   }),
   session: {
