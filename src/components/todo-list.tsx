@@ -59,7 +59,7 @@ export function TodoList({ listId }: TodoListProps) {
       if (!response.ok) throw new Error('Failed to create todo');
 
       const newTodoData = await response.json();
-      setTodos(prev => [...prev, newTodoData]);
+      setTodos((prev) => [...prev, newTodoData]);
       setNewTodo('');
       toast.success('Todo created successfully');
     } catch (error) {
@@ -80,8 +80,8 @@ export function TodoList({ listId }: TodoListProps) {
       if (!response.ok) throw new Error('Failed to update todo');
 
       const updatedTodo = await response.json();
-      setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, ...updatedTodo } : todo));
-      
+      setTodos((prev) => prev.map((todo) => (todo.id === id ? { ...todo, ...updatedTodo } : todo)));
+
       if (showToast) {
         toast.success(`Todo marked as ${completed ? 'completed' : 'incomplete'}`);
       }
@@ -102,7 +102,7 @@ export function TodoList({ listId }: TodoListProps) {
 
       if (!response.ok) throw new Error('Failed to delete todo');
 
-      setTodos(prev => prev.filter(todo => todo.id !== id));
+      setTodos((prev) => prev.filter((todo) => todo.id !== id));
       toast.success('Todo deleted successfully');
     } catch (error) {
       toast.error('Failed to delete todo');
@@ -124,7 +124,7 @@ export function TodoList({ listId }: TodoListProps) {
       if (!response.ok) throw new Error('Failed to update todo');
 
       const updatedTodo = await response.json();
-      setTodos(prev => prev.map(todo => todo.id === editingTodo.id ? { ...todo, ...updatedTodo } : todo));
+      setTodos((prev) => prev.map((todo) => (todo.id === editingTodo.id ? { ...todo, ...updatedTodo } : todo)));
       setEditingTodo(null);
       toast.success('Todo updated successfully');
     } catch (error) {
