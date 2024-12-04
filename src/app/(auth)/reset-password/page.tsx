@@ -1,12 +1,12 @@
 import { ResetPasswordForm } from '@/components/auth/reset-password-form';
 import { redirect } from 'next/navigation';
 
-export default function ResetPasswordPage({
+export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  if (!searchParams.token) {
+  if (!(await searchParams).token) {
     redirect('/signin');
   }
 
