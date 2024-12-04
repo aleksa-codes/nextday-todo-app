@@ -112,7 +112,7 @@ export function SignInForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='john@example.com' type='email' {...field} />
+                  <Input placeholder='john@example.com' type='email' autoComplete='email' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -174,7 +174,7 @@ export function SignInForm() {
                   </Dialog>
                 </div>
                 <FormControl>
-                  <Input placeholder='********' type='password' {...field} />
+                  <Input placeholder='********' type='password' autoComplete='current-password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

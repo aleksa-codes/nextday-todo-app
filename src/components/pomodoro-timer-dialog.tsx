@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -250,6 +250,11 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
           <DialogTitle className='flex items-center justify-between'>
             <span>{todoTitle}</span>
           </DialogTitle>
+          {/* short description */}
+          <DialogDescription>
+            Focus on your work for <span className='font-semibold text-primary'>{formatTime(duration * 60)}</span>{' '}
+            minutes.
+          </DialogDescription>
         </DialogHeader>
 
         <AnimatePresence>

@@ -161,7 +161,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email *</FormLabel>
               <FormControl>
-                <Input placeholder='john@example.com' type='email' {...field} />
+                <Input placeholder='john@example.com' type='email' autoComplete='email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -174,7 +174,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password *</FormLabel>
               <FormControl>
-                <Input placeholder='********' type='password' {...field} />
+                <Input placeholder='********' type='password' autoComplete='new-password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

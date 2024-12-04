@@ -13,7 +13,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { Loader2, Github, Chrome } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 type Provider = 'github' | 'google';
 
@@ -238,7 +245,7 @@ export function ProfileForm({ session }: ProfileFormProps) {
                   <DialogContent className='sm:max-w-[400px]'>
                     <DialogHeader>
                       <DialogTitle>Change name</DialogTitle>
-                      <p className='text-sm text-muted-foreground'>Make changes to your display name.</p>
+                      <DialogDescription>Make changes to your display name.</DialogDescription>
                     </DialogHeader>
                     <Form {...nameForm}>
                       <form onSubmit={nameForm.handleSubmit(onUpdateName)} className='space-y-6'>
@@ -312,9 +319,9 @@ export function ProfileForm({ session }: ProfileFormProps) {
                   <DialogContent className='sm:max-w-[400px]'>
                     <DialogHeader>
                       <DialogTitle>Change email address</DialogTitle>
-                      <p className='text-sm text-muted-foreground'>
+                      <DialogDescription>
                         Update your email address. You&rsquo;ll need to verify the new email.
-                      </p>
+                      </DialogDescription>
                     </DialogHeader>
                     <Form {...emailForm}>
                       <form onSubmit={emailForm.handleSubmit(onUpdateEmail)} className='space-y-6'>
@@ -384,9 +391,7 @@ export function ProfileForm({ session }: ProfileFormProps) {
                   <DialogContent className='sm:max-w-[400px]'>
                     <DialogHeader>
                       <DialogTitle>Change profile picture</DialogTitle>
-                      <p className='text-sm text-muted-foreground'>
-                        Upload a new profile picture. Recommended size 400x400px.
-                      </p>
+                      <DialogDescription>Upload a new profile picture. Recommended size 400x400px.</DialogDescription>
                     </DialogHeader>
                     <Form {...imageForm}>
                       <form onSubmit={imageForm.handleSubmit(onUpdateImage)} className='space-y-6'>
