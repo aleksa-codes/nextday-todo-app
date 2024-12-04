@@ -10,7 +10,7 @@ export const auth = betterAuth({
   appName: 'NextDay',
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   database: drizzleAdapter(db, {
-    provider: 'sqlite',
+    provider: 'sqlite', // or 'pg'
     schema: schema,
     usePlural: true,
   }),

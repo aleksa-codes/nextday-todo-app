@@ -28,3 +28,35 @@ export type Todo = typeof todos.$inferSelect;
 export type NewTodo = typeof todos.$inferInsert;
 export type TodoList = typeof todoLists.$inferSelect;
 export type NewTodoList = typeof todoLists.$inferInsert;
+
+// Postgres
+// import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
+// import { timestamps } from '@/db/columns.helpers';
+// import { users } from '@/db/schema/auth';
+
+// export const todoLists = pgTable('todo_lists', {
+//   id: serial('id').primaryKey(),
+//   name: text('name').notNull(),
+//   userId: text('user_id')
+//     .notNull()
+//     .references(() => users.id, { onDelete: 'cascade' }),
+//   ...timestamps,
+// });
+
+// export const todos = pgTable('todos', {
+//   id: serial('id').primaryKey(),
+//   content: text('content').notNull(),
+//   completed: boolean('completed').notNull().default(false),
+//   listId: integer('list_id')
+//     .notNull()
+//     .references(() => todoLists.id, { onDelete: 'cascade' }),
+//   userId: text('user_id')
+//     .notNull()
+//     .references(() => users.id, { onDelete: 'cascade' }),
+//   ...timestamps,
+// });
+
+// export type Todo = typeof todos.$inferSelect;
+// export type NewTodo = typeof todos.$inferInsert;
+// export type TodoList = typeof todoLists.$inferSelect;
+// export type NewTodoList = typeof todoLists.$inferInsert;
