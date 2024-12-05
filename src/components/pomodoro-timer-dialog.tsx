@@ -9,7 +9,7 @@ import AnimatedCircularProgressBar from '@/components/ui/animated-circular-progr
 import { toast } from 'sonner';
 import { Play, Pause, Music2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import {
   AlertDialog,

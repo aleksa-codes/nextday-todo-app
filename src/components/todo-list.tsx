@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { type Todo } from '@/db/schema/todos';
 import { Trash2, Loader2, Pencil, Plus, Save, X, Timer } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { PomodoroTimerDialog } from '@/components/pomodoro-timer-dialog';
 
 interface TodoListProps {

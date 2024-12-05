@@ -12,7 +12,7 @@ import { type TodoList } from '@/db/schema/todos';
 import { Trash2, Loader2, Pencil, Plus, Save, X, List } from 'lucide-react';
 import { toast } from 'sonner';
 import { TodoList as TodoListComponent } from '@/components/todo-list';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   AlertDialog,
   AlertDialogAction,
