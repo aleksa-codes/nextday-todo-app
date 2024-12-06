@@ -1,3 +1,4 @@
+// not working
 // import { sql } from 'drizzle-orm';
 // import { text } from 'drizzle-orm/sqlite-core';
 
@@ -12,32 +13,34 @@
 // };
 
 // export { timestamps };
-import { sql } from 'drizzle-orm';
-import { integer } from 'drizzle-orm/sqlite-core';
 
-const timestamps = {
-  createdAt: integer()
-    .default(sql`(strftime('%s', 'now'))`)
-    .notNull(),
-  updatedAt: integer()
-    .$onUpdate(() => sql`(strftime('%s', 'now'))`)
-    .notNull(),
-};
-
-export { timestamps };
-
-// Postgres
+// LibSQL
 // import { sql } from 'drizzle-orm';
-// import { timestamp } from 'drizzle-orm/pg-core';
+// import { integer } from 'drizzle-orm/sqlite-core';
 
 // const timestamps = {
-//   createdAt: timestamp('created_at')
-//     .default(sql`CURRENT_TIMESTAMP`)
+//   createdAt: integer()
+//     .default(sql`(strftime('%s', 'now'))`)
 //     .notNull(),
-//   updatedAt: timestamp('updated_at')
-//     .default(sql`CURRENT_TIMESTAMP`)
-//     .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+//   updatedAt: integer()
+//     .$onUpdate(() => sql`(strftime('%s', 'now'))`)
 //     .notNull(),
 // };
 
 // export { timestamps };
+
+// Postgres
+import { sql } from 'drizzle-orm';
+import { timestamp } from 'drizzle-orm/pg-core';
+
+const timestamps = {
+  createdAt: timestamp('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+};
+
+export { timestamps };
