@@ -16,6 +16,7 @@ export const auth = betterAuth({
     schema: schema,
     usePlural: true,
   }),
+  trustedOrigins: [getURL(), 'https://**vercel.app/**'],
   session: {
     cookieCache: {
       enabled: true,
@@ -32,7 +33,7 @@ export const auth = betterAuth({
         html: `
           <h1>Reset Your Password</h1>
           <p>Click the link below to reset your password:</p>
-          <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px;">Reset Password</a>
+          <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 6px;">Reset Password</a>
           <p>If you didn't request this password reset, you can safely ignore this email.</p>
         `,
         text: `Click the link to reset your password: ${url}`,
@@ -47,12 +48,12 @@ export const auth = betterAuth({
         to: user.email,
         subject: 'Verify your email address',
         html: `
-          <h1>Welcome to Your App!</h1>
+          <h1>Welcome to NextDay!</h1>
           <p>Please click the link below to verify your email address:</p>
-          <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px;">Verify Email</a>
+          <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 6px;">Verify Email</a>
           <p>If you didn't request this verification, you can safely ignore this email.</p>
         `,
-        text: `Welcome to Your App! Click the link to verify your email: ${url}`,
+        text: `Welcome to NextDay! Click the link to verify your email: ${url}`,
       });
     },
   },
@@ -62,14 +63,14 @@ export const auth = betterAuth({
       sendChangeEmailVerification: async ({ newEmail, url }) => {
         await sendEmail({
           to: newEmail,
-          subject: 'Verify your email address',
+          subject: 'Verify your new email address',
           html: `
-            <h1>Welcome to Your App!</h1>
-            <p>Please click the link below to verify your email address:</p>
-            <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px;">Verify Email</a>
+            <h1>Verify your new email address</h1>
+            <p>Please click the link below to verify your new email address:</p>
+            <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 6px;">Verify Email</a>
             <p>If you didn't request this verification, you can safely ignore this email.</p>
           `,
-          text: `Welcome to Your App! Click the link to verify your email: ${url}`,
+          text: `Click the link to verify your new email: ${url}`,
         });
       },
     },
