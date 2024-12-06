@@ -5,7 +5,7 @@ import { getURL } from '@/lib/utils';
 export const authClient = createAuthClient({
   baseURL: getURL(),
   fetchOptions: {
-    // mode: 'no-cors',
+    mode: 'no-cors',
     onError(e) {
       if (e.error.status === 429) {
         toast.error('Too many requests. Please try again later.');
