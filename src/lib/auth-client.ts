@@ -1,8 +1,9 @@
 import { createAuthClient } from 'better-auth/react';
 import { toast } from 'sonner';
+import { getURL } from '@/lib/utils';
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  baseURL: getURL(),
   fetchOptions: {
     onError(e) {
       if (e.error.status === 429) {

@@ -4,11 +4,12 @@ import { nextCookies } from 'better-auth/next-js';
 import { emailHarmony } from 'better-auth-harmony';
 import { db } from '@/db';
 import * as schema from '@/db/schema/auth';
-import { sendEmail } from './email';
+import { sendEmail } from '@/lib/email';
+import { getURL } from '@/lib/utils';
 
 export const auth = betterAuth({
   appName: 'NextDay',
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  baseURL: getURL(),
   database: drizzleAdapter(db, {
     // provider: 'sqlite',
     provider: 'pg',
