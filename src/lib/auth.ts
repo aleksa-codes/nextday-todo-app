@@ -16,7 +16,6 @@ export const auth = betterAuth({
     schema: schema,
     usePlural: true,
   }),
-  trustedOrigins: [getURL(), 'https://**vercel.app/**'],
   session: {
     cookieCache: {
       enabled: true,
