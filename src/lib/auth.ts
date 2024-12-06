@@ -16,6 +16,7 @@ export const auth = betterAuth({
     schema: schema,
     usePlural: true,
   }),
+  trustedOrigins: [getURL()],
   session: {
     cookieCache: {
       enabled: true,
