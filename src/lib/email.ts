@@ -18,7 +18,7 @@ export async function sendEmail({
 }) {
   try {
     const data = await resend.emails.send({
-      from: 'Your App <test@notifications.aleksa.io>',
+      from: 'NextDay <test@notifications.aleksa.io>',
       to,
       subject,
       text,
