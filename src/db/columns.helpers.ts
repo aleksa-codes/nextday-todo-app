@@ -34,13 +34,11 @@ import { sql } from 'drizzle-orm';
 import { timestamp } from 'drizzle-orm/pg-core';
 
 const timestamps = {
-  createdAt: timestamp('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp({ mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp({ mode: 'string' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => sql`now()`),
 };
 
 export { timestamps };
