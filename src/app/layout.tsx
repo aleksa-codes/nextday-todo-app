@@ -5,6 +5,7 @@ import '@/app/globals.css';
 import { Toaster } from 'sonner';
 import { Navbar } from '@/components/navbar';
 import { ThemeProvider } from 'next-themes';
+import TopLoader from '@/components/top-loader';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,6 +17,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en' suppressHydrationWarning>
+      <head>
+        <TopLoader />
+      </head>
       <body className={cn(inter.className, 'flex min-h-screen flex-col bg-gradient-to-b from-background to-muted/20')}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <Navbar />
