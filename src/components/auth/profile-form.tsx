@@ -105,22 +105,6 @@ export function ProfileForm({ session }: ProfileFormProps) {
     loadAccounts();
   }, []);
 
-  useEffect(() => {
-    if (!openDialogs.name) {
-      nameForm.reset({ name: userData.name });
-    }
-    if (!openDialogs.email) {
-      emailForm.reset({ email: userData.email });
-    }
-    if (!openDialogs.image) {
-      imageForm.reset({ profileImage: null });
-      setImagePreview(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
-  }, [openDialogs, nameForm, emailForm, imageForm, userData.name, userData.email, setImagePreview]);
-
   async function loadAccounts() {
     try {
       const response = await authClient.listAccounts();
@@ -235,7 +219,12 @@ export function ProfileForm({ session }: ProfileFormProps) {
                 </div>
                 <Dialog
                   open={openDialogs.name}
-                  onOpenChange={(open) => setOpenDialogs((prev) => ({ ...prev, name: open }))}
+                  onOpenChange={(open) => {
+                    setOpenDialogs((prev) => ({ ...prev, name: open }));
+                    if (!open) {
+                      nameForm.reset({ name: userData.name });
+                    }
+                  }}
                 >
                   <DialogTrigger asChild>
                     <Button variant='outline' className='w-full sm:w-auto'>
@@ -309,7 +298,12 @@ export function ProfileForm({ session }: ProfileFormProps) {
                 </div>
                 <Dialog
                   open={openDialogs.email}
-                  onOpenChange={(open) => setOpenDialogs((prev) => ({ ...prev, email: open }))}
+                  onOpenChange={(open) => {
+                    setOpenDialogs((prev) => ({ ...prev, email: open }));
+                    if (!open) {
+                      emailForm.reset({ email: userData.email });
+                    }
+                  }}
                 >
                   <DialogTrigger asChild>
                     <Button variant='outline' className='w-full sm:w-auto'>
@@ -381,7 +375,16 @@ export function ProfileForm({ session }: ProfileFormProps) {
                 </div>
                 <Dialog
                   open={openDialogs.image}
-                  onOpenChange={(open) => setOpenDialogs((prev) => ({ ...prev, image: open }))}
+                  onOpenChange={(open) => {
+                    setOpenDialogs((prev) => ({ ...prev, image: open }));
+                    if (!open) {
+                      imageForm.reset({ profileImage: null });
+                      setImagePreview(null);
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = '';
+                      }
+                    }
+                  }}
                 >
                   <DialogTrigger asChild>
                     <Button variant='outline' className='w-full sm:w-auto'>
