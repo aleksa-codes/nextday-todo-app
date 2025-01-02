@@ -17,7 +17,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Chrome, Github, Loader2 } from 'lucide-react';
@@ -34,7 +33,6 @@ const forgotPasswordSchema = z.object({
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -55,14 +53,13 @@ export function SignInForm() {
     const { email, password } = values;
 
     await authClient.signIn.email(
-      { email, password },
+      { email, password, callbackURL: '/todo' },
       {
         onRequest: () => setIsLoading(true),
         onSuccess: () => {
           toast.success('Signed in successfully', {
             description: 'Redirecting...',
           });
-          router.push('/todo');
         },
         onError: (ctx) => {
           toast.error('Sign In Error', {
