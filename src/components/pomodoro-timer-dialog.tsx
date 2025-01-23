@@ -270,17 +270,17 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
                 <iframe
                   ref={iframeRef}
                   src='https://www.lofi.cafe'
-                  className='focus-visible:ring-primary size-full rounded-md border focus-visible:ring-2 focus-visible:outline-none'
+                  className='focus-visible:ring-primary size-full rounded-md border focus-visible:ring-2 focus-visible:outline-hidden'
                   allow='autoplay'
                   tabIndex={0}
                 />
                 <p className='text-muted-foreground mt-2 text-xs leading-5'>
-                  Press <kbd className='border-border bg-muted rounded border px-1.5'>M</kbd> to focus music player. Use{' '}
-                  <kbd className='border-border bg-muted rounded border px-1.5'>Space</kbd> to play/pause,{' '}
-                  <kbd className='border-border bg-muted rounded border px-1.5'>←</kbd>
-                  <kbd className='border-border bg-muted rounded border px-1.5'>→</kbd> for previous/next song, and{' '}
-                  <kbd className='border-border bg-muted rounded border px-1.5'>↑</kbd>
-                  <kbd className='border-border bg-muted rounded border px-1.5'>↓</kbd> for volume.
+                  Press <kbd className='border-border bg-muted rounded-sm border px-1.5'>M</kbd> to focus music player.
+                  Use <kbd className='border-border bg-muted rounded-sm border px-1.5'>Space</kbd> to play/pause,{' '}
+                  <kbd className='border-border bg-muted rounded-sm border px-1.5'>←</kbd>
+                  <kbd className='border-border bg-muted rounded-sm border px-1.5'>→</kbd> for previous/next song, and{' '}
+                  <kbd className='border-border bg-muted rounded-sm border px-1.5'>↑</kbd>
+                  <kbd className='border-border bg-muted rounded-sm border px-1.5'>↓</kbd> for volume.
                 </p>
               </div>
             </motion.div>
