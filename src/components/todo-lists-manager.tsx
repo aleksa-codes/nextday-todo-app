@@ -137,10 +137,10 @@ export function TodoListsManager() {
 
   return (
     <div className='grid grid-cols-1 gap-6 md:grid-cols-4'>
-      <Card className='border-2 transition-colors hover:border-primary/20 md:col-span-1'>
+      <Card className='hover:border-primary/20 border-2 transition-colors md:col-span-1'>
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
-            <List className='h-5 w-5 text-primary' />
+            <List className='text-primary h-5 w-5' />
             Lists
           </CardTitle>
           <CardDescription>Manage your todo lists</CardDescription>
@@ -174,7 +174,7 @@ export function TodoListsManager() {
                   >
                     <div
                       className={cn(
-                        'flex cursor-pointer items-center gap-2 rounded-md p-2 transition-all hover:bg-accent hover:shadow-sm',
+                        'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md p-2 transition-all hover:shadow-sm',
                         selectedListId === list.id && 'bg-accent shadow-sm',
                       )}
                       onClick={() => setSelectedListId(list.id)}
@@ -217,7 +217,7 @@ export function TodoListsManager() {
                         </form>
                       ) : (
                         <>
-                          <List className='h-4 w-4 text-primary' />
+                          <List className='text-primary h-4 w-4' />
                           <span className='flex-1 truncate font-medium'>{list.name}</span>
                           <div className='flex gap-1'>
                             <Button
@@ -236,7 +236,7 @@ export function TodoListsManager() {
                             <Button
                               size='icon'
                               variant='ghost'
-                              className='h-8 w-8 hover:text-destructive'
+                              className='hover:text-destructive h-8 w-8'
                               onClick={(e) => {
                                 e.stopPropagation();
                                 deleteList(list.id);
@@ -262,7 +262,7 @@ export function TodoListsManager() {
                   <Badge variant='secondary' className='text-sm'>
                     No Lists
                   </Badge>
-                  <p className='text-center text-sm text-muted-foreground'>Create a list to get started!</p>
+                  <p className='text-muted-foreground text-center text-sm'>Create a list to get started!</p>
                 </motion.div>
               )}
             </div>
@@ -290,7 +290,7 @@ export function TodoListsManager() {
               <Badge variant='outline' className='text-sm'>
                 No List Selected
               </Badge>
-              <p className='text-center text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-center text-sm'>
                 Select a list from the sidebar or create a new one to manage your todos.
               </p>
             </motion.div>

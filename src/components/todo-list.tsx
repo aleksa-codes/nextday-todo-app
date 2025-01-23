@@ -185,7 +185,7 @@ export function TodoList({ listId }: TodoListProps) {
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
               >
-                <Card className='border transition-colors hover:border-primary/20'>
+                <Card className='hover:border-primary/20 border transition-colors'>
                   <CardContent className='p-4'>
                     <div className='flex items-center gap-3'>
                       {editingTodo?.id === todo.id ? (
@@ -232,7 +232,7 @@ export function TodoList({ listId }: TodoListProps) {
                             <label
                               htmlFor={`todo-${todo.id}`}
                               className={cn(
-                                'flex-1 cursor-pointer select-none text-sm transition-colors',
+                                'flex-1 cursor-pointer text-sm transition-colors select-none',
                                 todo.completed && 'text-muted-foreground line-through',
                               )}
                             >
@@ -268,7 +268,7 @@ export function TodoList({ listId }: TodoListProps) {
                             <Button
                               size='icon'
                               variant='ghost'
-                              className='h-8 w-8 hover:text-destructive'
+                              className='hover:text-destructive h-8 w-8'
                               onClick={() => deleteTodo(todo.id)}
                               aria-label='Delete todo'
                             >
@@ -294,7 +294,7 @@ export function TodoList({ listId }: TodoListProps) {
               <Badge variant='secondary' className='text-sm'>
                 No Todos
               </Badge>
-              <p className='text-center text-sm text-muted-foreground'>Add a todo to get started!</p>
+              <p className='text-muted-foreground text-center text-sm'>Add a todo to get started!</p>
             </motion.div>
           )}
         </div>

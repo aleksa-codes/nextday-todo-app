@@ -95,7 +95,7 @@ export default function AnimatedCircularProgressBar({
       </svg>
       <div
         data-current-value={currentPercent}
-        className='absolute inset-0 m-auto size-fit delay-0 duration-1000 ease-linear animate-in fade-in'
+        className='animate-in fade-in absolute inset-0 m-auto size-fit delay-0 duration-1000 ease-linear'
       >
         {children}
       </div>

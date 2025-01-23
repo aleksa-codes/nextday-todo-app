@@ -195,7 +195,7 @@ export function SignInForm() {
           <Separator className='w-full' />
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background px-2 text-muted-foreground'>or</span>
+          <span className='bg-background text-muted-foreground px-2'>or</span>
         </div>
       </div>
 
@@ -246,7 +246,7 @@ export function SignInForm() {
         </Button>
       </div>
 
-      <div className='mt-4 text-center text-sm text-muted-foreground'>
+      <div className='text-muted-foreground mt-4 text-center text-sm'>
         Don&apos;t have an account?{' '}
         <Link href='/signup' className='text-primary hover:underline'>
           Sign up

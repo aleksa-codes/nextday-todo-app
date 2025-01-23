@@ -252,7 +252,7 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
           </DialogTitle>
           {/* short description */}
           <DialogDescription>
-            Focus on your work for <span className='font-semibold text-primary'>{formatTime(duration * 60)}</span>{' '}
+            Focus on your work for <span className='text-primary font-semibold'>{formatTime(duration * 60)}</span>{' '}
             minutes.
           </DialogDescription>
         </DialogHeader>
@@ -270,17 +270,17 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
                 <iframe
                   ref={iframeRef}
                   src='https://www.lofi.cafe'
-                  className='size-full rounded-md border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+                  className='focus-visible:ring-primary size-full rounded-md border focus-visible:ring-2 focus-visible:outline-none'
                   allow='autoplay'
                   tabIndex={0}
                 />
-                <p className='mt-2 text-xs leading-5 text-muted-foreground'>
-                  Press <kbd className='rounded border border-border bg-muted px-1.5'>M</kbd> to focus music player. Use{' '}
-                  <kbd className='rounded border border-border bg-muted px-1.5'>Space</kbd> to play/pause,{' '}
-                  <kbd className='rounded border border-border bg-muted px-1.5'>←</kbd>
-                  <kbd className='rounded border border-border bg-muted px-1.5'>→</kbd> for previous/next song, and{' '}
-                  <kbd className='rounded border border-border bg-muted px-1.5'>↑</kbd>
-                  <kbd className='rounded border border-border bg-muted px-1.5'>↓</kbd> for volume.
+                <p className='text-muted-foreground mt-2 text-xs leading-5'>
+                  Press <kbd className='border-border bg-muted rounded border px-1.5'>M</kbd> to focus music player. Use{' '}
+                  <kbd className='border-border bg-muted rounded border px-1.5'>Space</kbd> to play/pause,{' '}
+                  <kbd className='border-border bg-muted rounded border px-1.5'>←</kbd>
+                  <kbd className='border-border bg-muted rounded border px-1.5'>→</kbd> for previous/next song, and{' '}
+                  <kbd className='border-border bg-muted rounded border px-1.5'>↑</kbd>
+                  <kbd className='border-border bg-muted rounded border px-1.5'>↓</kbd> for volume.
                 </p>
               </div>
             </motion.div>
@@ -316,8 +316,8 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
                 transition={{ duration: 0.5 }}
                 className='h-12 space-y-0.5 text-center'
               >
-                <p className='line-clamp-2 text-sm italic text-muted-foreground'>&quot;{currentQuote.text}&quot;</p>
-                <p className='text-xs text-muted-foreground/60'>- {currentQuote.author}</p>
+                <p className='text-muted-foreground line-clamp-2 text-sm italic'>&quot;{currentQuote.text}&quot;</p>
+                <p className='text-muted-foreground/60 text-xs'>- {currentQuote.author}</p>
               </motion.div>
             )}
           </AnimatePresence>

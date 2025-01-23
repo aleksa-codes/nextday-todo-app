@@ -215,7 +215,7 @@ export function ProfileForm({ session }: ProfileFormProps) {
               <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
                 <div className='flex flex-col space-y-1.5'>
                   <p className='text-sm font-semibold'>Name</p>
-                  <p className='text-sm text-muted-foreground'>{userData.name}</p>
+                  <p className='text-muted-foreground text-sm'>{userData.name}</p>
                 </div>
                 <Dialog
                   open={openDialogs.name}
@@ -285,16 +285,16 @@ export function ProfileForm({ session }: ProfileFormProps) {
                   <div className='flex items-center gap-2'>
                     <p className='text-sm font-semibold'>Email</p>
                     {userData.emailVerified ? (
-                      <span className='inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'>
+                      <span className='inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset'>
                         Verified
                       </span>
                     ) : (
-                      <span className='inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20'>
+                      <span className='inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-yellow-600/20 ring-inset'>
                         Unverified
                       </span>
                     )}
                   </div>
-                  <p className='text-sm text-muted-foreground'>{userData.email}</p>
+                  <p className='text-muted-foreground text-sm'>{userData.email}</p>
                 </div>
                 <Dialog
                   open={openDialogs.email}
@@ -364,13 +364,13 @@ export function ProfileForm({ session }: ProfileFormProps) {
 
               <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
                 <div className='flex items-start gap-4 sm:items-center'>
-                  <Avatar className='h-16 w-16 ring-2 ring-muted ring-offset-2'>
+                  <Avatar className='ring-muted h-16 w-16 ring-2 ring-offset-2'>
                     <AvatarImage src={userData.image} alt={userData.name} />
                     <AvatarFallback>{getUserInitials(userData.name, userData.email)}</AvatarFallback>
                   </Avatar>
                   <div className='flex flex-col space-y-1.5'>
                     <p className='text-sm font-semibold'>Profile picture</p>
-                    <p className='text-sm text-muted-foreground'>Update your profile picture</p>
+                    <p className='text-muted-foreground text-sm'>Update your profile picture</p>
                   </div>
                 </div>
                 <Dialog
@@ -399,7 +399,7 @@ export function ProfileForm({ session }: ProfileFormProps) {
                     <Form {...imageForm}>
                       <form onSubmit={imageForm.handleSubmit(onUpdateImage)} className='space-y-6'>
                         <div className='flex flex-col items-center space-y-6'>
-                          <Avatar className='h-32 w-32 ring-2 ring-muted ring-offset-4'>
+                          <Avatar className='ring-muted h-32 w-32 ring-2 ring-offset-4'>
                             <AvatarImage src={imagePreview || userData.image} alt={userData.name} />
                             <AvatarFallback>{userData.name?.[0] || userData.email?.[0]}</AvatarFallback>
                           </Avatar>
