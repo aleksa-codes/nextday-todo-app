@@ -99,8 +99,8 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
         <CardContent>
           <div className='flex items-center justify-between'>
             <div className='space-y-1'>
-              <p className='text-sm font-medium leading-none'>Password</p>
-              <p className='text-sm text-muted-foreground'>••••••••••</p>
+              <p className='text-sm leading-none font-medium'>Password</p>
+              <p className='text-muted-foreground text-sm'>••••••••••</p>
             </div>
             <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
               <DialogTrigger asChild>
@@ -162,7 +162,7 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
                       />
                       <label
                         htmlFor='revoke-sessions'
-                        className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                        className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                       >
                         Sign out from other devices
                       </label>
@@ -202,7 +202,7 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
 
                 return (
                   <div key={activeSession.id} className='py-2'>
-                    <div className='flex items-center gap-2 text-sm text-foreground'>
+                    <div className='text-foreground flex items-center gap-2 text-sm'>
                       <div className='flex items-center gap-2'>
                         {device.type === 'mobile' ? <Smartphone className='h-4 w-4' /> : <Laptop className='h-4 w-4' />}
                         <span>

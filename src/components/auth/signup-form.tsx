@@ -116,7 +116,7 @@ export function SignUpForm() {
       <Card className='w-full'>
         <CardHeader className='text-center'>
           <div className='mb-4 flex justify-center'>
-            <Mail className='h-12 w-12 text-primary' />
+            <Mail className='text-primary h-12 w-12' />
           </div>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -125,7 +125,7 @@ export function SignUpForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col gap-4'>
-          <p className='text-center text-sm text-muted-foreground'>
+          <p className='text-muted-foreground text-center text-sm'>
             Didn&apos;t receive the email? Check your spam folder or try signing in to resend the verification email.
           </p>
           <div className='flex flex-col gap-2'>
@@ -187,11 +187,11 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel className='flex items-center gap-2'>
                 Profile Image
-                <span className='text-sm text-muted-foreground'>(Max size: 5MB)</span>
+                <span className='text-muted-foreground text-sm'>(Max size: 5MB)</span>
               </FormLabel>
               <div className='flex items-end gap-4'>
                 {imagePreview && (
-                  <Avatar className='h-16 w-16 border-2 border-primary'>
+                  <Avatar className='border-primary h-16 w-16 border-2'>
                     <AvatarImage src={imagePreview} alt='Profile preview' />
                     <AvatarFallback>{form.getValues('name')?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                   </Avatar>
@@ -231,7 +231,7 @@ export function SignUpForm() {
           <Separator className='w-full' />
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background px-2 text-muted-foreground'>or</span>
+          <span className='bg-background text-muted-foreground px-2'>or</span>
         </div>
       </div>
 
@@ -282,7 +282,7 @@ export function SignUpForm() {
         </Button>
       </div>
 
-      <div className='mt-4 text-center text-sm text-muted-foreground'>
+      <div className='text-muted-foreground mt-4 text-center text-sm'>
         Already have an account?{' '}
         <Link href='/signin' className='text-primary hover:underline'>
           Sign in

@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <TopLoader />
       </head>
-      <body className={cn(inter.className, 'flex min-h-screen flex-col bg-gradient-to-b from-background to-muted/20')}>
+      <body className={cn(inter.className, 'from-background to-muted/20 flex min-h-screen flex-col bg-gradient-to-b')}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <Navbar />
           <main className='container mx-auto flex flex-1 flex-col items-center justify-center py-8'>{children}</main>
