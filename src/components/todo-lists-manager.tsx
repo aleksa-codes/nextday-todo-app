@@ -174,8 +174,8 @@ export function TodoListsManager() {
                   >
                     <div
                       className={cn(
-                        'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md p-2 transition-all hover:shadow-sm',
-                        selectedListId === list.id && 'bg-accent shadow-sm',
+                        'hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md p-2 transition-all hover:shadow-xs',
+                        selectedListId === list.id && 'bg-accent shadow-xs',
                       )}
                       onClick={() => setSelectedListId(list.id)}
                       role='listitem'
