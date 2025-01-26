@@ -104,7 +104,7 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
     }
   }
 
-  async function onDeleteAccount(data: { confirmMessage: string }) {
+  async function onDeleteAccount() {
     try {
       await authClient.deleteUser(
         {
@@ -331,7 +331,7 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
               <DialogHeader>
                 <DialogTitle>Delete Account</DialogTitle>
                 <DialogDescription>
-                  This action cannot be undone. Please type "DELETE MY ACCOUNT" to confirm.
+                  This action cannot be undone. Please type &quot;DELETE MY ACCOUNT&quot; to confirm.
                 </DialogDescription>
               </DialogHeader>
               <Form {...deleteAccountForm}>
