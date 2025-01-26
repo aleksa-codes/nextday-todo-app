@@ -171,8 +171,10 @@ export function ProfileForm({ session }: ProfileFormProps) {
           },
         },
       );
-    } catch (error) {
-      toast.error(`Failed to unlink ${provider} account`);
+    } catch (error: unknown) {
+      toast.error(`Failed to unlink ${provider} account`, {
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+      });
       setIsUnlinking(null);
     }
   }
