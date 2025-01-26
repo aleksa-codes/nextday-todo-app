@@ -54,6 +54,17 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResetPasswordDialogOpen, setIsResetPasswordDialogOpen] = useState(false);
+
+  const resetPasswordSchema = z.object({
+    email: z
+      .string()
+      .email('Please enter a valid email address')
+      .refine((email) => email === session?.user.email, {
+        message: "Email doesn't match your account email",
+      }),
+  });
 
   const passwordForm = useForm({
     resolver: zodResolver(passwordFormSchema),
@@ -70,6 +81,20 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
       confirmMessage: '',
     },
   });
+
+  const resetPasswordForm = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const maskEmail = (email: string) => {
+    const [localPart, domain] = email.split('@');
+    const maskedLocal = localPart.slice(0, 3) + '*'.repeat(localPart.length - 3);
+    const maskedDomain = '*'.repeat(domain.length - 4) + domain.slice(-4);
+    return `${maskedLocal}@${maskedDomain}`;
+  };
 
   async function onPasswordSubmit(data: z.infer<typeof passwordFormSchema>) {
     try {
@@ -135,6 +160,28 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
     }
   }
 
+  async function handleForgotPassword(values: z.infer<typeof resetPasswordSchema>) {
+    try {
+      setIsLoading(true);
+      await authClient.forgetPassword({
+        email: values.email,
+        redirectTo: '/reset-password',
+      });
+      toast.success('Reset link sent', {
+        description: 'Check your email for the password reset link',
+      });
+      setIsResetPasswordDialogOpen(false);
+      resetPasswordForm.reset();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send reset link';
+      toast.error('Error', {
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className='space-y-6'>
       <Card>
@@ -145,8 +192,8 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
         <CardContent>
           <div className='flex items-center justify-between'>
             <div className='space-y-1'>
-              <p className='text-sm leading-none font-medium'>Password</p>
-              <p className='text-muted-foreground text-sm'>••••••••••</p>
+              <p className='text-sm leading-none font-medium'>Current Password</p>
+              <p className='text-muted-foreground text-sm'>••••••••••••</p>
             </div>
             <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
               <DialogTrigger asChild>
@@ -221,6 +268,63 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
                         </div>
                       ) : (
                         'Change Password'
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Password Reset</CardTitle>
+          <CardDescription>Need to recover access? We&apos;ll send you a password reset link.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='flex items-center justify-between'>
+            <div className='space-y-1'>
+              <p className='text-sm leading-none font-medium'>Account Email</p>
+              <p className='text-muted-foreground text-sm'>
+                {session?.user.email ? maskEmail(session.user.email) : ''}
+              </p>
+            </div>
+            <Dialog open={isResetPasswordDialogOpen} onOpenChange={setIsResetPasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant='outline'>Send Reset Link</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Reset Your Password</DialogTitle>
+                  <DialogDescription>
+                    For security, please confirm your email address. We&apos;ll send you a link to reset your password.
+                  </DialogDescription>
+                </DialogHeader>
+                <Form {...resetPasswordForm}>
+                  <form onSubmit={resetPasswordForm.handleSubmit(handleForgotPassword)} className='space-y-4'>
+                    <FormField
+                      control={resetPasswordForm.control}
+                      name='email'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder='Enter your email' type='email' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type='submit' className='w-full' disabled={isLoading}>
+                      {isLoading ? (
+                        <div className='flex items-center justify-center gap-2'>
+                          <Loader2 className='h-4 w-4 animate-spin' />
+                          <span>Sending...</span>
+                        </div>
+                      ) : (
+                        'Send Reset Link'
                       )}
                     </Button>
                   </form>
