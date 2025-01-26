@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 // Define route patterns
 const PUBLIC_ROUTES = ['/'];
-const AUTH_ROUTES = ['/signin', '/signup', '/reset-password'];
+const AUTH_ROUTES = ['/signin', '/signup', '/reset-password', '/goodbye'];
 
 const isPublicRoute = (pathname: string) => PUBLIC_ROUTES.includes(pathname);
 const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);

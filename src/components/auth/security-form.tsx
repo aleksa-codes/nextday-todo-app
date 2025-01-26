@@ -35,6 +35,12 @@ const passwordFormSchema = z
     path: ['confirmPassword'],
   });
 
+const deleteAccountFormSchema = z.object({
+  confirmMessage: z.string().refine((val) => val === 'DELETE MY ACCOUNT', {
+    message: 'Please type "DELETE MY ACCOUNT" to confirm',
+  }),
+});
+
 interface SecurityFormProps {
   session: Session | null;
   activeSessions: Session['session'][];
@@ -46,6 +52,8 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
   const [revokeOtherSessions, setRevokeOtherSessions] = useState(true);
   const [isTerminating, setIsTerminating] = useState<string>();
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const passwordForm = useForm({
     resolver: zodResolver(passwordFormSchema),
@@ -53,6 +61,13 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
+    },
+  });
+
+  const deleteAccountForm = useForm({
+    resolver: zodResolver(deleteAccountFormSchema),
+    defaultValues: {
+      confirmMessage: '',
     },
   });
 
@@ -86,6 +101,37 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
       );
     } catch {
       toast.error('Error changing password');
+    }
+  }
+
+  async function onDeleteAccount(data: { confirmMessage: string }) {
+    try {
+      await authClient.deleteUser(
+        {
+          callbackURL: '/goodbye',
+        },
+        {
+          onRequest: () => setIsDeletingAccount(true),
+          onSuccess: () => {
+            toast.success('Account deletion email sent. Please check your inbox.');
+            setIsDeleteDialogOpen(false);
+            deleteAccountForm.reset();
+            setIsDeletingAccount(false);
+          },
+          onError: (ctx) => {
+            toast.error('Error deleting account', {
+              description: ctx.error.message,
+            });
+            setIsDeletingAccount(false);
+          },
+          onSettled: () => {
+            setIsDeletingAccount(false);
+          },
+        },
+      );
+    } catch {
+      toast.error('Error deleting account');
+      setIsDeletingAccount(false);
     }
   }
 
@@ -266,6 +312,67 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
           <Button variant='outline' disabled>
             Coming Soon
           </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className='text-destructive'>Delete Account</CardTitle>
+          <CardDescription>
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant='destructive'>Delete Account</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Delete Account</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. Please type "DELETE MY ACCOUNT" to confirm.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...deleteAccountForm}>
+                <form onSubmit={deleteAccountForm.handleSubmit(onDeleteAccount)} className='space-y-6'>
+                  <FormField
+                    control={deleteAccountForm.control}
+                    name='confirmMessage'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirmation</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Type "DELETE MY ACCOUNT" to confirm' autoComplete='off' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className='flex gap-3'>
+                    <Button
+                      type='button'
+                      variant='outline'
+                      className='flex-1'
+                      onClick={() => setIsDeleteDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type='submit' variant='destructive' className='flex-1' disabled={isDeletingAccount}>
+                      {isDeletingAccount ? (
+                        <div className='flex items-center justify-center gap-2'>
+                          <Loader2 className='h-4 w-4 animate-spin' />
+                          <span>Deleting...</span>
+                        </div>
+                      ) : (
+                        'Delete Account'
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </div>

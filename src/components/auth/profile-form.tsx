@@ -9,7 +9,7 @@ import { type Session } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { Loader2, Github, Chrome } from 'lucide-react';
@@ -60,7 +60,8 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ session }: ProfileFormProps) {
-  const [isLinking, setIsLinking] = useState(false);
+  const [isLinking, setIsLinking] = useState<Provider | null>(null);
+  const [isUnlinking, setIsUnlinking] = useState<Provider | null>(null);
   const [accounts, setAccounts] = useState<{ id: string; providerId: Provider }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUpdatingName, setIsUpdatingName] = useState(false);
@@ -121,14 +122,58 @@ export function ProfileForm({ session }: ProfileFormProps) {
 
   async function handleLinkAccount(provider: Provider) {
     try {
-      setIsLinking(true);
-      await authClient.linkSocial({
-        provider,
-        callbackURL: '/profile',
-      });
+      setIsLinking(provider);
+      await authClient.linkSocial(
+        {
+          provider,
+          callbackURL: '/profile',
+        },
+        {
+          onSuccess: () => {
+            toast.success(`Successfully linked ${provider} account`);
+            loadAccounts(); // Refresh the accounts list
+          },
+          onError: (ctx) => {
+            toast.error(`Failed to link ${provider} account`, {
+              description: ctx.error.message,
+            });
+            setIsLinking(null);
+          },
+          onSettled: () => {
+            setIsLinking(null);
+          },
+        },
+      );
     } catch {
-      toast.error('Failed to link account');
-      setIsLinking(false);
+      toast.error(`Failed to link ${provider} account`);
+      setIsLinking(null);
+    }
+  }
+
+  async function handleUnlinkAccount(provider: Provider) {
+    try {
+      setIsUnlinking(provider);
+      await authClient.unlinkAccount(
+        { providerId: provider },
+        {
+          onSuccess: () => {
+            toast.success(`Successfully unlinked ${provider} account`);
+            loadAccounts(); // Refresh the accounts list
+          },
+          onError: (ctx) => {
+            toast.error(`Failed to unlink ${provider} account`, {
+              description: ctx.error.message,
+            });
+            setIsUnlinking(null);
+          },
+          onSettled: () => {
+            setIsUnlinking(null);
+          },
+        },
+      );
+    } catch (error) {
+      toast.error(`Failed to unlink ${provider} account`);
+      setIsUnlinking(null);
     }
   }
 
@@ -475,6 +520,7 @@ export function ProfileForm({ session }: ProfileFormProps) {
       <Card>
         <CardHeader>
           <CardTitle className='text-xl font-bold'>Connected Accounts</CardTitle>
+          <CardDescription>Connect your account with third-party providers for easier sign in.</CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col gap-4'>
           <div className='flex items-center justify-between'>
@@ -482,26 +528,66 @@ export function ProfileForm({ session }: ProfileFormProps) {
               <Github className='h-5 w-5' />
               <span>Github</span>
             </div>
-            <Button
-              variant='outline'
-              onClick={() => handleLinkAccount('github')}
-              disabled={isLinking || accounts.some((account) => account.providerId === 'github')}
-            >
-              {accounts.some((account) => account.providerId === 'github') ? 'Connected' : 'Connect'}
-            </Button>
+            {accounts.some((account) => account.providerId === 'github') ? (
+              <Button
+                variant='outline'
+                onClick={() => handleUnlinkAccount('github')}
+                disabled={isUnlinking === 'github' || accounts.length === 1}
+              >
+                {isUnlinking === 'github' ? (
+                  <>
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    Unlinking...
+                  </>
+                ) : (
+                  'Disconnect'
+                )}
+              </Button>
+            ) : (
+              <Button variant='outline' onClick={() => handleLinkAccount('github')} disabled={isLinking === 'github'}>
+                {isLinking === 'github' ? (
+                  <>
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    Connecting...
+                  </>
+                ) : (
+                  'Connect'
+                )}
+              </Button>
+            )}
           </div>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2'>
               <Chrome className='h-5 w-5' />
               <span>Google</span>
             </div>
-            <Button
-              variant='outline'
-              onClick={() => handleLinkAccount('google')}
-              disabled={isLinking || accounts.some((account) => account.providerId === 'google')}
-            >
-              {accounts.some((account) => account.providerId === 'google') ? 'Connected' : 'Connect'}
-            </Button>
+            {accounts.some((account) => account.providerId === 'google') ? (
+              <Button
+                variant='outline'
+                onClick={() => handleUnlinkAccount('google')}
+                disabled={isUnlinking === 'google' || accounts.length === 1}
+              >
+                {isUnlinking === 'google' ? (
+                  <>
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    Unlinking...
+                  </>
+                ) : (
+                  'Disconnect'
+                )}
+              </Button>
+            ) : (
+              <Button variant='outline' onClick={() => handleLinkAccount('google')} disabled={isLinking === 'google'}>
+                {isLinking === 'google' ? (
+                  <>
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    Connecting...
+                  </>
+                ) : (
+                  'Connect'
+                )}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -6,6 +6,7 @@ import { db } from '@/db';
 import * as schema from '@/db/schema/auth';
 import { sendEmail } from '@/lib/email';
 import { getURL } from '@/lib/utils';
+import { APIError } from 'better-auth/api';
 
 export const auth = betterAuth({
   appName: 'NextDay',
@@ -17,6 +18,7 @@ export const auth = betterAuth({
     usePlural: true,
   }),
   session: {
+    freshAge: 0,
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5,
@@ -73,21 +75,52 @@ export const auth = betterAuth({
         });
       },
     },
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        await sendEmail({
+          to: user.email,
+          subject: 'Confirm Account Deletion',
+          html: `
+            <h1>Account Deletion Confirmation</h1>
+            <p>We received a request to delete your NextDay account. This action cannot be undone.</p>
+            <p>Click the link below to permanently delete your account:</p>
+            <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #dc2626; color: white; text-decoration: none; border-radius: 6px;">Delete Account</a>
+            <p>If you didn't request this deletion, you can safely ignore this email.</p>
+            <p>This link will expire in 1 hour.</p>
+          `,
+          text: `Click the link to delete your account: ${url}. This action cannot be undone.`,
+        });
+      },
+      beforeDelete: async (user) => {
+        if (user.email.includes('admin')) {
+          throw new APIError('BAD_REQUEST', {
+            message: "Admin accounts can't be deleted",
+          });
+        }
+      },
+      afterDelete: async (user) => {
+        // You could add cleanup logic here if needed
+        console.log(`User ${user.id} has been deleted`);
+      },
+    },
   },
   account: {
     accountLinking: {
-      trustedProviders: ['google', 'github'],
+      // enabled: true,
+      // trustedProviders: ['github'],
+      allowDifferentEmails: true,
     },
   },
-  // socialProviders: {
-  //   google: {
-  //     clientId: process.env.GOOGLE_CLIENT_ID!,
-  //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  //   },
-  //   github: {
-  //     clientId: process.env.GITHUB_CLIENT_ID!,
-  //     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-  //   },
-  // },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    },
+  },
   plugins: [nextCookies(), emailHarmony()],
 });
