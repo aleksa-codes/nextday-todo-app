@@ -6,8 +6,10 @@ export default async function ResetPasswordPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  if (!(await searchParams).token) {
-    redirect('/signin');
+  const token = (await searchParams).token;
+
+  if (!token || typeof token !== 'string') {
+    redirect('/forgot-password');
   }
 
   return (
@@ -16,7 +18,7 @@ export default async function ResetPasswordPage({
         <h1 className='text-2xl font-semibold tracking-tight'>Reset Password</h1>
         <p className='text-muted-foreground text-sm'>Enter your new password below</p>
       </div>
-      <ResetPasswordForm />
+      <ResetPasswordForm token={token} />
     </div>
   );
 }
