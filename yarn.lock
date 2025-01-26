@@ -1827,10 +1827,10 @@ better-auth-harmony@^1.1.3:
     mailchecker "^6.0.14"
     validator "^13.12.0"
 
-better-auth@^1.1.14:
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/better-auth/-/better-auth-1.1.14.tgz#0378376706ae8c874ff82ee952fb18f59fca8cfa"
-  integrity sha512-DnGHPxRLIQFGyqvPPXbudiD3sI+04BU0hiNnnoQaXg//JZSxdfBs/YbNx3ccVWz6aFt/XL6WtrxXDyUPCC1qrQ==
+better-auth@^1.1.15-beta.6:
+  version "1.1.15-beta.6"
+  resolved "https://registry.yarnpkg.com/better-auth/-/better-auth-1.1.15-beta.6.tgz#844e8b1a2b8ab8d2b60ad348e9cc74175667e5d7"
+  integrity sha512-tpVSVFdw5QZxcRw5zm8NeJLNllG0Aua5R0fFhrVbFA3TYPUphUNlaFAYB+WhW0c8N9EZpJm8Wq+tnY6g0pPL4Q==
   dependencies:
     "@better-auth/utils" "0.2.3"
     "@better-fetch/fetch" "1.1.12"
