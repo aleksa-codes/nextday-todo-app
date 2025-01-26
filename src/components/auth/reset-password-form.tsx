@@ -21,7 +21,11 @@ const resetPasswordSchema = z
     path: ['confirmPassword'],
   });
 
-export function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+  token: string;
+}
+
+export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -38,6 +42,7 @@ export function ResetPasswordForm() {
       setIsLoading(true);
       await authClient.resetPassword({
         newPassword: values.newPassword,
+        token,
       });
       toast.success('Password reset successfully');
       router.push('/signin');
