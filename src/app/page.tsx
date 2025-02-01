@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { CheckSquare2, Clock, Music2, Rocket, Zap, Heart } from 'lucide-react';
+import { CheckSquare2, Clock, Music2, Rocket, Zap, Heart, Github } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -20,6 +20,12 @@ export default function Home() {
         <Link href='/signin'>
           <Button variant='outline' size='lg'>
             Sign In
+          </Button>
+        </Link>
+        <Link href='https://github.com/aleksa-codes/nextday-todo-app' target='_blank' rel='noopener noreferrer'>
+          <Button variant='outline' size='lg'>
+            <Github />
+            GitHub
           </Button>
         </Link>
       </div>
