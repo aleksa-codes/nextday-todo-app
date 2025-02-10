@@ -4,7 +4,7 @@ import { CheckSquare2, Clock, Music2, Rocket, Zap, Heart, Github } from 'lucide-
 
 export default function Home() {
   return (
-    <div className='flex max-w-5xl flex-col items-center justify-center gap-12'>
+    <div className='flex flex-col items-center justify-center gap-12'>
       <div className='flex max-w-3xl flex-col items-center gap-4 text-center'>
         <h1 className='text-3xl leading-tight font-bold tracking-tighter md:text-5xl lg:text-6xl lg:leading-[1.1]'>
           NextDay: Your Productivity Companion
