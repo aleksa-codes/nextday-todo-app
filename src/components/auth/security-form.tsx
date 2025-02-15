@@ -36,8 +36,13 @@ const passwordFormSchema = z
   });
 
 const deleteAccountFormSchema = z.object({
-  confirmMessage: z.string().refine((val) => val === 'DELETE MY ACCOUNT', {
-    message: 'Please type "DELETE MY ACCOUNT" to confirm',
+  confirmMessage: z.string().superRefine((val, ctx) => {
+    if (val !== 'DELETE MY ACCOUNT') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please type "DELETE MY ACCOUNT" to confirm',
+      });
+    }
   }),
 });
 
