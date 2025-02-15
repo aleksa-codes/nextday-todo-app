@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { authClient } from '@/lib/auth-client';
 import { type Session } from '@/lib/auth-client';
+import { uploadImageToSupabase } from '@/lib/supabase-storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -45,15 +46,6 @@ const imageFormSchema = z.object({
       return file.size <= 5 * 1024 * 1024;
     }, 'Image must be less than 5MB'),
 });
-
-async function convertImageToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 
 interface ProfileFormProps {
   session: Session | null;
@@ -217,17 +209,30 @@ export function ProfileForm({ session }: ProfileFormProps) {
   async function onUpdateImage(data: z.infer<typeof imageFormSchema>) {
     try {
       setIsUpdatingImage(true);
-      if (!data.profileImage) return;
-      const imageUrl = await convertImageToBase64(data.profileImage);
+      if (!data.profileImage || !session?.user.id) return;
+
+      // Pass the current image URL for cleanup
+      const imageUrl = await uploadImageToSupabase(data.profileImage, session.user.id, userData.image);
+
+      // Update user profile with the new image URL
       await authClient.updateUser({
         image: imageUrl,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Profile picture updated successfully');
+          },
+          onError: (error) => {
+            toast.error(error.error.message);
+          },
+        },
       });
+
       setUserData((prev) => ({ ...prev, image: imageUrl }));
       setOpenDialogs((prev) => ({ ...prev, image: false }));
       setImagePreview(null);
-      toast.success('Profile image updated successfully');
-    } catch {
-      toast.error('Failed to update profile image');
+    } catch (error) {
+      console.error('Error updating profile picture:', error);
+      toast.error('Failed to update profile picture');
     } finally {
       setIsUpdatingImage(false);
     }
@@ -448,7 +453,9 @@ export function ProfileForm({ session }: ProfileFormProps) {
                         <div className='flex flex-col items-center space-y-6'>
                           <Avatar className='ring-muted h-32 w-32 ring-2 ring-offset-4'>
                             <AvatarImage src={imagePreview || userData.image} alt={userData.name} />
-                            <AvatarFallback>{userData.name?.[0] || userData.email?.[0]}</AvatarFallback>
+                            <AvatarFallback className='text-4xl'>
+                              {userData.name?.[0] || userData.email?.[0]}
+                            </AvatarFallback>
                           </Avatar>
                           <div className='flex w-full gap-3'>
                             <Button
