@@ -31,7 +31,9 @@ const forgotPasswordSchema = z.object({
 });
 
 export function SignInForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -55,7 +57,7 @@ export function SignInForm() {
     await authClient.signIn.email(
       { email, password, callbackURL: '/todo' },
       {
-        onRequest: () => setIsLoading(true),
+        onRequest: () => setIsEmailLoading(true),
         onSuccess: () => {
           toast.success('Signed in successfully', {
             description: 'Redirecting...',
@@ -65,9 +67,9 @@ export function SignInForm() {
           toast.error('Sign In Error', {
             description: ctx.error.message,
           });
-          setIsLoading(false);
+          setIsEmailLoading(false);
         },
-        onSettled: () => setIsLoading(false),
+        onSettled: () => setIsEmailLoading(false),
       },
     );
   }
@@ -76,7 +78,7 @@ export function SignInForm() {
     const { email } = values;
 
     try {
-      setIsLoading(true);
+      setIsEmailLoading(true);
       await authClient.forgetPassword({
         email,
         redirectTo: '/reset-password',
@@ -94,9 +96,53 @@ export function SignInForm() {
         description: errorMessage,
       });
     } finally {
-      setIsLoading(false);
+      setIsEmailLoading(false);
     }
   }
+
+  async function handleGoogleSignIn() {
+    await authClient.signIn.social(
+      { provider: 'google', callbackURL: '/todo' },
+      {
+        onRequest: () => setIsGoogleLoading(true),
+        onSuccess: () => {
+          toast.success('Signed in successfully', {
+            description: 'Redirecting...',
+          });
+        },
+        onError: () => {
+          toast.error('Sign In Error', {
+            description: 'Failed to sign in with Google',
+          });
+          setIsGoogleLoading(false);
+        },
+        onSettled: () => setIsGoogleLoading(false),
+      },
+    );
+  }
+
+  async function handleGithubSignIn() {
+    await authClient.signIn.social(
+      { provider: 'github', callbackURL: '/todo' },
+      {
+        onRequest: () => setIsGithubLoading(true),
+        onSuccess: () => {
+          toast.success('Signed in successfully', {
+            description: 'Redirecting...',
+          });
+        },
+        onError: () => {
+          toast.error('Sign In Error', {
+            description: 'Failed to sign in with Github',
+          });
+          setIsGithubLoading(false);
+        },
+        onSettled: () => setIsGithubLoading(false),
+      },
+    );
+  }
+
+  const isAnyLoading = isEmailLoading || isGoogleLoading || isGithubLoading;
 
   return (
     <>
@@ -105,6 +151,7 @@ export function SignInForm() {
           <FormField
             control={form.control}
             name='email'
+            disabled={isAnyLoading}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -118,6 +165,7 @@ export function SignInForm() {
           <FormField
             control={form.control}
             name='password'
+            disabled={isAnyLoading}
             render={({ field }) => (
               <FormItem>
                 <div className='flex items-center justify-between'>
@@ -153,10 +201,10 @@ export function SignInForm() {
                           <Button
                             type='button'
                             className='w-full'
-                            disabled={isLoading}
+                            disabled={isAnyLoading}
                             onClick={forgotPasswordForm.handleSubmit(onForgotPassword)}
                           >
-                            {isLoading ? (
+                            {isEmailLoading ? (
                               <div className='flex items-center justify-center gap-2'>
                                 <Loader2 className='h-4 w-4 animate-spin' />
                                 <span>Sending...</span>
@@ -177,8 +225,8 @@ export function SignInForm() {
               </FormItem>
             )}
           />
-          <Button type='submit' className='w-full' disabled={isLoading}>
-            {isLoading ? (
+          <Button type='submit' className='w-full' disabled={isAnyLoading}>
+            {isEmailLoading ? (
               <div className='flex items-center justify-center gap-2'>
                 <Loader2 className='h-4 w-4 animate-spin' />
                 <span>Signing in...</span>
@@ -200,49 +248,31 @@ export function SignInForm() {
       </div>
 
       <div className='flex flex-col gap-2'>
-        <Button
-          variant='outline'
-          className='w-full gap-2'
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              await authClient.signIn.social({
-                provider: 'google',
-                callbackURL: '/todo',
-              });
-            } catch {
-              toast.error('Error', {
-                description: 'Failed to sign in with Google',
-              });
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-        >
-          <Chrome />
-          <span>Sign in with Google</span>
+        <Button variant='outline' className='w-full gap-2' onClick={handleGoogleSignIn} disabled={isAnyLoading}>
+          {isGoogleLoading ? (
+            <div className='flex items-center justify-center gap-2'>
+              <Loader2 className='h-4 w-4 animate-spin' />
+              <span>Signing in...</span>
+            </div>
+          ) : (
+            <>
+              <Chrome />
+              <span>Sign in with Google</span>
+            </>
+          )}
         </Button>
-        <Button
-          variant='outline'
-          className='w-full gap-2'
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              await authClient.signIn.social({
-                provider: 'github',
-                callbackURL: '/todo',
-              });
-            } catch {
-              toast.error('Error', {
-                description: 'Failed to sign in with Github',
-              });
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-        >
-          <Github />
-          <span>Sign in with Github</span>
+        <Button variant='outline' className='w-full gap-2' onClick={handleGithubSignIn} disabled={isAnyLoading}>
+          {isGithubLoading ? (
+            <div className='flex items-center justify-center gap-2'>
+              <Loader2 className='h-4 w-4 animate-spin' />
+              <span>Signing in...</span>
+            </div>
+          ) : (
+            <>
+              <Github />
+              <span>Sign in with Github</span>
+            </>
+          )}
         </Button>
       </div>
 

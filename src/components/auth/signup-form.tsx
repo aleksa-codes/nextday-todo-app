@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,41 +12,26 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, X, Loader2, Chrome, Github } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Mail, Loader2, Chrome, Github } from 'lucide-react';
 
-const signUpSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  profileImage: z
-    .custom<File | null>()
-    .optional()
-    .refine((file) => {
-      if (!file) return true;
-      return file.type.startsWith('image/');
-    }, 'Please upload an image file')
-    .refine((file) => {
-      if (!file) return true;
-      return file.size <= 5 * 1024 * 1024;
-    }, 'Image must be less than 5MB'),
-});
-
-async function convertImageToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+const signUpSchema = z
+  .object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
   });
-}
 
 export function SignUpForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -54,59 +39,75 @@ export function SignUpForm() {
       name: '',
       email: '',
       password: '',
-      profileImage: null,
+      confirmPassword: '',
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue('profileImage', file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const resetFileInput = () => {
-    form.setValue('profileImage', null);
-    form.clearErrors('profileImage');
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
+  const isAnyLoading = isEmailLoading || isGoogleLoading || isGithubLoading;
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    const { name, email, password, profileImage } = values;
+    const { name, email, password } = values;
 
     await authClient.signUp.email(
       {
         email,
         password,
         name,
-        image: profileImage ? await convertImageToBase64(profileImage) : '',
       },
       {
-        onRequest: () => {
-          setIsLoading(true);
-        },
+        onRequest: () => setIsEmailLoading(true),
         onSuccess: () => {
           toast.success('Account created successfully');
           setUserEmail(email);
           setIsVerificationSent(true);
         },
         onError: (ctx) => {
-          toast.error('Error', {
-            description: ctx.error.message,
+          toast.error('Error', { description: ctx.error.message });
+          setIsEmailLoading(false);
+        },
+        onSettled: () => setIsEmailLoading(false),
+      },
+    );
+  }
+
+  async function handleGoogleSignUp() {
+    await authClient.signIn.social(
+      { provider: 'google', callbackURL: '/todo' },
+      {
+        onRequest: () => setIsGoogleLoading(true),
+        onSuccess: () => {
+          toast.success('Signed in successfully', {
+            description: 'Redirecting...',
           });
-          setIsLoading(false);
         },
-        onSettled: () => {
-          setIsLoading(false);
+        onError: () => {
+          toast.error('Sign Up Error', {
+            description: 'Failed to sign up with Google',
+          });
+          setIsGoogleLoading(false);
         },
+        onSettled: () => setIsGoogleLoading(false),
+      },
+    );
+  }
+
+  async function handleGithubSignUp() {
+    await authClient.signIn.social(
+      { provider: 'github', callbackURL: '/todo' },
+      {
+        onRequest: () => setIsGithubLoading(true),
+        onSuccess: () => {
+          toast.success('Signed in successfully', {
+            description: 'Redirecting...',
+          });
+        },
+        onError: () => {
+          toast.error('Sign Up Error', {
+            description: 'Failed to sign up with Github',
+          });
+          setIsGithubLoading(false);
+        },
+        onSettled: () => setIsGithubLoading(false),
       },
     );
   }
@@ -146,9 +147,11 @@ export function SignUpForm() {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name *</FormLabel>
+              <FormLabel>
+                Name <span className='text-destructive'>*</span>
+              </FormLabel>
               <FormControl>
-                <Input placeholder='John Doe' {...field} />
+                <Input placeholder='John Doe' {...field} disabled={isAnyLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -159,9 +162,17 @@ export function SignUpForm() {
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email *</FormLabel>
+              <FormLabel>
+                Email <span className='text-destructive'>*</span>
+              </FormLabel>
               <FormControl>
-                <Input placeholder='john@example.com' type='email' autoComplete='email' {...field} />
+                <Input
+                  placeholder='john@example.com'
+                  type='email'
+                  autoComplete='email'
+                  {...field}
+                  disabled={isAnyLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -172,9 +183,17 @@ export function SignUpForm() {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password *</FormLabel>
+              <FormLabel>
+                Password <span className='text-destructive'>*</span>
+              </FormLabel>
               <FormControl>
-                <Input placeholder='********' type='password' autoComplete='new-password' {...field} />
+                <Input
+                  placeholder='********'
+                  type='password'
+                  autoComplete='new-password'
+                  {...field}
+                  disabled={isAnyLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -182,40 +201,27 @@ export function SignUpForm() {
         />
         <FormField
           control={form.control}
-          name='profileImage'
-          render={() => (
+          name='confirmPassword'
+          render={({ field }) => (
             <FormItem>
-              <FormLabel className='flex items-center gap-2'>
-                Profile Image
-                <span className='text-muted-foreground text-sm'>(Max size: 5MB)</span>
+              <FormLabel>
+                Confirm Password <span className='text-destructive'>*</span>
               </FormLabel>
-              <div className='flex items-end gap-4'>
-                {imagePreview && (
-                  <Avatar className='border-primary h-16 w-16 border-2'>
-                    <AvatarImage src={imagePreview} alt='Profile preview' />
-                    <AvatarFallback>{form.getValues('name')?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
-                  </Avatar>
-                )}
-                <div className='flex w-full items-center gap-2'>
-                  <FormControl>
-                    <Input
-                      id='image'
-                      type='file'
-                      accept='image/*'
-                      onChange={handleImageChange}
-                      className='w-full'
-                      ref={fileInputRef}
-                    />
-                  </FormControl>
-                  {imagePreview && <X className='cursor-pointer' onClick={resetFileInput} />}
-                </div>
-              </div>
+              <FormControl>
+                <Input
+                  placeholder='********'
+                  type='password'
+                  autoComplete='new-password'
+                  {...field}
+                  disabled={isAnyLoading}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full' disabled={isLoading}>
-          {isLoading ? (
+        <Button type='submit' className='w-full' disabled={isAnyLoading}>
+          {isEmailLoading ? (
             <div className='flex items-center justify-center gap-2'>
               <Loader2 className='h-4 w-4 animate-spin' />
               <span>Creating account...</span>
@@ -236,49 +242,31 @@ export function SignUpForm() {
       </div>
 
       <div className='flex flex-col gap-2'>
-        <Button
-          variant='outline'
-          className='w-full gap-2'
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              await authClient.signIn.social({
-                provider: 'google',
-                callbackURL: '/todo',
-              });
-            } catch {
-              toast.error('Error', {
-                description: 'Failed to sign up with Google',
-              });
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-        >
-          <Chrome />
-          <span>Continue with Google</span>
+        <Button variant='outline' className='w-full gap-2' onClick={handleGoogleSignUp} disabled={isAnyLoading}>
+          {isGoogleLoading ? (
+            <div className='flex items-center justify-center gap-2'>
+              <Loader2 className='h-4 w-4 animate-spin' />
+              <span>Signing up...</span>
+            </div>
+          ) : (
+            <>
+              <Chrome />
+              <span>Continue with Google</span>
+            </>
+          )}
         </Button>
-        <Button
-          variant='outline'
-          className='w-full gap-2'
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              await authClient.signIn.social({
-                provider: 'github',
-                callbackURL: '/todo',
-              });
-            } catch {
-              toast.error('Error', {
-                description: 'Failed to sign up with Github',
-              });
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-        >
-          <Github />
-          <span>Continue with Github</span>
+        <Button variant='outline' className='w-full gap-2' onClick={handleGithubSignUp} disabled={isAnyLoading}>
+          {isGithubLoading ? (
+            <div className='flex items-center justify-center gap-2'>
+              <Loader2 className='h-4 w-4 animate-spin' />
+              <span>Signing up...</span>
+            </div>
+          ) : (
+            <>
+              <Github />
+              <span>Continue with Github</span>
+            </>
+          )}
         </Button>
       </div>
 
