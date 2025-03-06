@@ -1,5 +1,4 @@
 import { Resend } from 'resend';
-import * as React from 'react';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -18,7 +17,7 @@ export async function sendEmail({
 }) {
   try {
     const data = await resend.emails.send({
-      from: 'NextDay <test@notifications.aleksa.io>',
+      from: 'NextDay <nextday@updates.aleksa.codes>',
       to,
       subject,
       text,
