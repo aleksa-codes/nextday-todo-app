@@ -12,5 +12,9 @@ export default async function ProfilePage() {
       redirect('/signin');
     });
 
+  if (!session) {
+    redirect('/signin');
+  }
+
   return <ProfileForm session={JSON.parse(JSON.stringify(session))} />;
 }

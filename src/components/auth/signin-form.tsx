@@ -55,7 +55,7 @@ export function SignInForm() {
     const { email, password } = values;
 
     await authClient.signIn.email(
-      { email, password, callbackURL: '/todo' },
+      { email, password, callbackURL: '/todos' },
       {
         onRequest: () => setIsEmailLoading(true),
         onSuccess: () => {
@@ -102,7 +102,7 @@ export function SignInForm() {
 
   async function handleGoogleSignIn() {
     await authClient.signIn.social(
-      { provider: 'google', callbackURL: '/todo' },
+      { provider: 'google', callbackURL: '/todos' },
       {
         onRequest: () => setIsGoogleLoading(true),
         onSuccess: () => {
@@ -123,7 +123,7 @@ export function SignInForm() {
 
   async function handleGithubSignIn() {
     await authClient.signIn.social(
-      { provider: 'github', callbackURL: '/todo' },
+      { provider: 'github', callbackURL: '/todos' },
       {
         onRequest: () => setIsGithubLoading(true),
         onSuccess: () => {

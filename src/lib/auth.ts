@@ -7,12 +7,13 @@ import * as schema from '@/db/schema/auth';
 import { sendEmail } from '@/lib/email';
 import { getURL } from '@/lib/utils';
 import { APIError } from 'better-auth/api';
+import { polar } from '@polar-sh/better-auth';
+import { polar as client } from '@/lib/polar';
 
 export const auth = betterAuth({
   appName: 'NextDay',
   baseURL: getURL(),
   database: drizzleAdapter(db, {
-    // provider: 'sqlite',
     provider: 'pg',
     schema: schema,
     usePlural: true,
@@ -59,6 +60,20 @@ export const auth = betterAuth({
     },
   },
   user: {
+    additionalFields: {
+      balance: {
+        type: 'number',
+        required: false,
+        defaultValue: 100,
+        input: false,
+      },
+      // customerId: {
+      //   type: 'string',
+      //   required: false,
+      //   defaultValue: '',
+      //   input: false,
+      // },
+    },
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ newEmail, url }) => {
@@ -122,5 +137,23 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  plugins: [nextCookies(), emailHarmony()],
+  plugins: [
+    nextCookies(),
+    emailHarmony(),
+    polar({
+      client,
+      createCustomerOnSignUp: true,
+      enableCustomerPortal: true,
+      checkout: {
+        enabled: true,
+        products: [
+          {
+            productId: '95b5f8d6-f0a1-4103-9dff-7b2103f29f25',
+            slug: 'pro',
+          },
+        ],
+        successUrl: '/success?checkout_id={CHECKOUT_ID}',
+      },
+    }),
+  ],
 });

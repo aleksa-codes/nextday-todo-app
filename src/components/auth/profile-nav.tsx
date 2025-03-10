@@ -1,41 +1,50 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User2, Shield } from 'lucide-react';
-
-const sidebarNavItems = [
-  {
-    title: 'Profile',
-    href: '/profile',
-    icon: User2,
-  },
-  {
-    title: 'Security',
-    href: '/profile/security',
-    icon: Shield,
-  },
-];
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { UserCircle, Shield, CreditCard } from 'lucide-react';
 
 export function ProfileNav() {
   const pathname = usePathname();
 
+  const routes = [
+    {
+      href: '/profile',
+      label: 'Profile',
+      icon: <UserCircle className='mr-2 h-4 w-4' />,
+      active: pathname === '/profile',
+    },
+    {
+      href: '/profile/billing',
+      label: 'Billing',
+      icon: <CreditCard className='mr-2 h-4 w-4' />,
+      active: pathname === '/profile/billing',
+    },
+    {
+      href: '/profile/security',
+      label: 'Security',
+      icon: <Shield className='mr-2 h-4 w-4' />,
+      active: pathname === '/profile/security',
+    },
+  ];
+
   return (
-    <nav className='flex flex-col gap-2'>
-      {sidebarNavItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-            pathname === item.href ? 'bg-secondary text-secondary-foreground' : 'hover:bg-secondary/50',
-          )}
+    <div className='flex w-full flex-col space-y-2'>
+      {routes.map((route) => (
+        <Button
+          key={route.href}
+          variant={route.active ? 'secondary' : 'ghost'}
+          className={cn('justify-start', route.active ? 'bg-muted' : 'hover:bg-transparent')}
+          asChild
         >
-          <item.icon className='h-4 w-4' />
-          {item.title}
-        </Link>
+          <Link href={route.href}>
+            {route.icon}
+            {route.label}
+          </Link>
+        </Button>
       ))}
-    </nav>
+    </div>
   );
 }

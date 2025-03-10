@@ -15,6 +15,10 @@ export default async function SecurityPage() {
     redirect('/signin');
   });
 
+  if (!session) {
+    redirect('/signin');
+  }
+
   return (
     <SecurityForm
       session={JSON.parse(JSON.stringify(session))}

@@ -1,8 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-local.db
-.env
+# github
+/.github
 
+# local env files
+.env*.local
+*.env
 
 # dependencies
 /node_modules
@@ -32,9 +35,6 @@ local.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# local env files
-.env*.local
 
 # vercel
 .vercel

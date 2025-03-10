@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSessionCookie } from 'better-auth';
+import { getSessionCookie } from 'better-auth/cookies';
 
 // Define route patterns
 const PUBLIC_ROUTES = ['/'];
@@ -14,7 +14,7 @@ export default function middleware(request: NextRequest) {
 
   // If user is logged in, they shouldn't access auth routes
   if (sessionCookie && isAuthRoute(pathname)) {
-    return NextResponse.redirect(new URL('/todo', request.url));
+    return NextResponse.redirect(new URL('/todos', request.url));
   }
 
   // If user is not logged in and trying to access protected routes
@@ -36,6 +36,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth|api/webhook/polar|_next/static|_next/image|favicon.ico).*)',
   ],
 };

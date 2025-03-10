@@ -1,6 +1,6 @@
 // not working
 // import { sql } from 'drizzle-orm';
-// import { text } from 'drizzle-orm/sqlite-core';
+// import { text } from 'drizzle-orm/pg-core';
 
 // const timestamps = {
 //   createdAt: text()
@@ -13,29 +13,20 @@
 // };
 
 // export { timestamps };
-
-// LibSQL
-// import { sql } from 'drizzle-orm';
-// import { integer } from 'drizzle-orm/sqlite-core';
-
-// const timestamps = {
-//   createdAt: integer()
-//     .default(sql`(strftime('%s', 'now'))`)
-//     .notNull(),
-//   updatedAt: integer()
-//     .$onUpdate(() => sql`(strftime('%s', 'now'))`)
-//     .notNull(),
-// };
-
-// export { timestamps };
-
-// Postgres
 import { sql } from 'drizzle-orm';
 import { timestamp } from 'drizzle-orm/pg-core';
 
 const timestamps = {
-  createdAt: timestamp({ mode: 'string' }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: 'string' })
+  createdAt: timestamp({
+    withTimezone: true,
+    mode: 'string',
+  })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp({
+    withTimezone: true,
+    mode: 'string',
+  })
     .notNull()
     .defaultNow()
     .$onUpdate(() => sql`now()`),

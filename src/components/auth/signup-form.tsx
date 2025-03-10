@@ -72,7 +72,7 @@ export function SignUpForm() {
 
   async function handleGoogleSignUp() {
     await authClient.signIn.social(
-      { provider: 'google', callbackURL: '/todo' },
+      { provider: 'google', callbackURL: '/todos' },
       {
         onRequest: () => setIsGoogleLoading(true),
         onSuccess: () => {
@@ -93,7 +93,7 @@ export function SignUpForm() {
 
   async function handleGithubSignUp() {
     await authClient.signIn.social(
-      { provider: 'github', callbackURL: '/todo' },
+      { provider: 'github', callbackURL: '/todos' },
       {
         onRequest: () => setIsGithubLoading(true),
         onSuccess: () => {

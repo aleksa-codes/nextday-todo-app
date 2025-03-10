@@ -28,9 +28,9 @@ export default async function TodoPage() {
             {greeting()}, {session.user.name || session.user.email}
           </h2>
         </div>
-        <p className='text-muted-foreground text-lg'>Welcome back! Here are your todo lists.</p>
+        <p className='text-muted-foreground text-lg'>Welcome back! Make the most of your day.</p>
       </div>
-      <TodoListsManager />
+      <TodoListsManager session={session} />
     </div>
   );
 }
