@@ -1,4 +1,3 @@
-import { getSubscriptionState } from '@/lib/subscription';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,14 +6,18 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { CreditCard, Calendar, Globe, AlertTriangle, RefreshCw, Clock, Sparkles, CheckCircle } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function BillingPage() {
-  const state = await getSubscriptionState();
-
-  if (!state) {
-    redirect('/signin');
-  }
+  const state = await auth.api
+    .polarCustomerState({
+      headers: await headers(),
+    })
+    .catch(() => {
+      redirect('/signin');
+    });
 
   // Check if user has an active subscription
   const hasActiveSubscription = state.activeSubscriptions && state.activeSubscriptions.length > 0;

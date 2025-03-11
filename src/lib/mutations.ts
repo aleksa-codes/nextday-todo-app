@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Todo, TodoList } from '@/db/schema/todos';
-import { getURL } from '@/lib/utils';
+import { type CustomerState } from '@polar-sh/sdk/models/components/customerstate';
 
 const fetchBalance = async () => {
   const response = await fetch('/api/balance');
@@ -64,21 +64,14 @@ export function useSubscription() {
     queryKey: ['subscription'],
     queryFn: async () => {
       try {
-        // We need to use fetch on the client side since getSubscriptionState uses server-only APIs
-        const response = await fetch(`${getURL()}/api/auth/state`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const state: CustomerState = await fetch('/api/auth/state').then((res) => res.json());
 
-        if (!response.ok) {
+        if (!state || !state.activeSubscriptions?.length) {
           return { hasActiveSubscription: false };
         }
 
-        const state = await response.json();
         return {
-          hasActiveSubscription: Boolean(state?.activeSubscriptions?.length),
+          hasActiveSubscription: true,
           state,
         };
       } catch (error) {

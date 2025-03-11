@@ -1,8 +1,10 @@
-import { requireSubscription } from '@/lib/subscription';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Crown, CreditCard, Calendar, Check, Globe } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: 'Premium Features | NextDay',
@@ -10,9 +12,21 @@ export const metadata = {
 };
 
 export default async function PremiumFeaturesPage() {
-  // This will handle auth, subscription check and return state
-  const state = await requireSubscription();
-  const subscription = state.activeSubscriptions[0];
+  const state = await auth.api
+    .polarCustomerState({
+      headers: await headers(),
+    })
+    .catch(() => {
+      redirect('/signin');
+    });
+
+  // Check if user has an active subscription
+  const hasActiveSubscription = state.activeSubscriptions && state.activeSubscriptions.length > 0;
+  const subscription = hasActiveSubscription ? state.activeSubscriptions[0] : null;
+
+  if (!subscription) {
+    redirect('/pricing');
+  }
 
   const formattedAmount = new Intl.NumberFormat('en-US', {
     style: 'currency',
