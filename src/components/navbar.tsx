@@ -20,6 +20,7 @@ import {
   Menu,
   Settings,
   Crown,
+  ImageIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import {
@@ -87,6 +88,11 @@ export function Navbar() {
       href: '/todos',
       label: 'ToDos',
       icon: <ListTodo className='h-4 w-4' />,
+    },
+    {
+      href: '/image-generator',
+      label: 'AI Image',
+      icon: <ImageIcon className='h-4 w-4' />,
     },
     {
       href: '/pricing',
