@@ -14,7 +14,7 @@ export default function middleware(request: NextRequest) {
 
   // If user is logged in, they shouldn't access auth routes
   if (sessionCookie && isAuthRoute(pathname)) {
-    return NextResponse.redirect(new URL('/todos', request.url));
+    return NextResponse.redirect(new URL('/profile', request.url));
   }
 
   // If user is not logged in and trying to access protected routes
