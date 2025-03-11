@@ -144,16 +144,16 @@ export const auth = betterAuth({
       client,
       createCustomerOnSignUp: true,
       enableCustomerPortal: true,
-      checkout: {
-        enabled: true,
-        products: [
-          {
-            productId: '95b5f8d6-f0a1-4103-9dff-7b2103f29f25',
-            slug: 'pro',
-          },
-        ],
-        successUrl: '/success?checkout_id={CHECKOUT_ID}',
-      },
+      // checkout: {
+      //   enabled: true,
+      //   products: [
+      //     {
+      //       productId: '95b5f8d6-f0a1-4103-9dff-7b2103f29f25',
+      //       slug: 'pro',
+      //     },
+      //   ],
+      //   successUrl: '/success?checkout_id={CHECKOUT_ID}',
+      // },
     }),
   ],
 });

@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'NextDay',
-  description: 'Next.js Todo App with BetterAuth',
+  description: 'Next.js Todo App with BetterAuth and Polar',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
