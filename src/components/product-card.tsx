@@ -214,7 +214,11 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
                 <span className='ml-2'>Loading...</span>
               </div>
             ) : (
-              <Link href={checkoutUrl} className='flex size-full items-center justify-center gap-2 py-3'>
+              <Link
+                href={checkoutUrl}
+                className='flex size-full items-center justify-center gap-2 py-3'
+                prefetch={false}
+              >
                 {isCredits ? (
                   <>
                     <Coins />
