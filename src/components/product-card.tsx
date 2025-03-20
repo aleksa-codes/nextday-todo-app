@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { authClient } from '@/lib/auth-client';
 import type { Product } from '@polar-sh/sdk/models/components/product';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +23,6 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, featured = false, monthlyProduct }: ProductCardProps) => {
-  const { data: session, isPending } = authClient.useSession();
-
   const price = getFormattedPrice(product);
   const interval = getInterval(product);
   const isCredits = !product.recurringInterval;
@@ -44,13 +41,10 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
   })();
 
   const checkoutUrl = (() => {
-    if (!session?.user) return '/signin';
-
     const params = new URLSearchParams({
       productId: product.id,
-      customerExternalId: session.user.id,
     });
-    return `api/checkout?${params.toString()}`;
+    return `api/auth/checkout?${params.toString()}`;
   })();
 
   return (
@@ -206,19 +200,15 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
             )}
             variant={featured ? 'default' : 'outline'}
             size='lg'
-            disabled={isPending || !mounted}
+            disabled={!mounted}
           >
-            {isPending || !mounted ? (
+            {!mounted ? (
               <div className='flex items-center justify-center py-3'>
                 <Loader2 className='animate-spin' />
                 <span className='ml-2'>Loading...</span>
               </div>
             ) : (
-              <Link
-                href={checkoutUrl}
-                className='flex size-full items-center justify-center gap-2 py-3'
-                prefetch={false}
-              >
+              <Link href={checkoutUrl} className='flex size-full items-center justify-center gap-2 py-3'>
                 {isCredits ? (
                   <>
                     <Coins />
