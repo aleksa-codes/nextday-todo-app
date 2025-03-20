@@ -21,22 +21,34 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useBalance, useSubtractBalance } from '@/lib/mutations';
 
 const EXAMPLE_PROMPTS = [
-  'A majestic mountain landscape at sunset with golden light and dramatic clouds',
-  'A futuristic city with flying cars and neon lights at night',
-  'A serene beach with crystal clear turquoise water and palm trees',
-  'A magical forest with glowing mushrooms and a small cottage',
-  'An ancient temple covered in vines and moss in the jungle',
-  'A cyberpunk street market with holographic signs and diverse characters',
-  'A cozy coffee shop interior with warm lighting and steam rising from cups',
-  'An underwater scene with colorful coral reef and tropical fish',
-  'A fantasy castle on a floating island in the clouds',
-  'A post-apocalyptic cityscape with nature reclaiming abandoned buildings',
-  'A steampunk airship flying through a stormy sky',
-  'A tranquil Japanese garden with cherry blossoms and a small pond',
-  'A cosmic scene with planets, nebulas, and stars in vibrant colors',
-  'A medieval village with half-timbered houses and a marketplace',
-  'An enchanted library with books floating in the air and magical lights',
-  'A winter wonderland with snow-covered trees and northern lights',
+  'A majestic mountain landscape at sunset, with jagged peaks bathed in golden light, dramatic cirrus clouds reflecting a fiery orange sky, and a winding river snaking through the valley.',
+  'A futuristic cyberpunk city at night, with towering skyscrapers illuminated by neon signs, flying cars weaving through holographic advertisements, and rain-slicked streets reflecting the vibrant lights.',
+  'A serene tropical beach with crystal-clear turquoise water lapping gently against white sand, swaying palm trees casting long shadows, and a vibrant coral reef visible just beneath the surface.',
+  'A magical enchanted forest at twilight, with bioluminescent mushrooms casting an ethereal glow, a small moss-covered cottage nestled among ancient trees, and fireflies flickering in the twilight.',
+  'An ancient Mayan temple deep within a lush jungle, its stone facade covered in thick vines and vibrant green moss, sunlight filtering through the dense canopy, illuminating intricate carvings.',
+  'A bustling cyberpunk street market in a crowded alleyway, holographic signs flickering above vendors selling exotic wares, diverse characters with cybernetic enhancements, and steam rising from food stalls.',
+  'A cozy and warm coffee shop interior, with soft ambient lighting, steam swirling from freshly brewed coffee cups, patrons reading books in comfortable armchairs, and the aroma of roasted beans filling the air.',
+  "An underwater scene in a vibrant coral reef, with schools of colorful tropical fish swimming among intricate coral formations, sunlight filtering through the water's surface, and sea turtles gracefully gliding by.",
+  "A fantastical castle perched atop a floating island in the clouds, with towering spires reaching towards the heavens, a rainbow arcing across the sky, and waterfalls cascading down from the island's edges.",
+  'A post-apocalyptic cityscape overgrown with nature, abandoned skyscrapers covered in vines and foliage, sunlight filtering through broken windows, and wildlife reclaiming the urban ruins.',
+  'A massive steampunk airship soaring through a stormy sky, its brass and copper components gleaming in the lightning flashes, gears turning, and steam billowing from its engines.',
+  'A tranquil Japanese Zen garden in spring, with delicate cherry blossoms blooming around a serene pond, a stone lantern casting a soft glow, and raked gravel creating intricate patterns.',
+  'A breathtaking cosmic scene with swirling nebulas in vibrant hues of purple, blue, and pink, distant planets with rings and moons, and a shower of stardust illuminating the vast expanse of space.',
+  'A bustling medieval village marketplace, with half-timbered houses lining cobblestone streets, vendors selling their wares, knights in shining armor strolling through the crowd, and a lively atmosphere.',
+  'An enchanted library with towering shelves filled with ancient tomes, books floating in mid-air illuminated by magical orbs, a grand staircase leading to hidden chambers, and a wise old wizard studying a mystical manuscript.',
+  'A winter wonderland scene, with snow-covered pine trees glistening under the moonlight, the aurora borealis dancing across the night sky, a cozy log cabin nestled in the snowy landscape, and a gentle snowfall.',
+  'A photorealistic close up of a dew covered spider web in the early morning, with each droplet reflecting the rising sun.',
+  'A stylized pixel art of a lone robot wandering through a desolate desert landscape, with a retro color palette and a nostalgic atmosphere.',
+  'An impressionistic painting of a field of sunflowers swaying in the breeze, with vibrant brushstrokes and a focus on light and color.',
+  'A surreal dreamscape with melting clocks, floating objects, and distorted perspectives, inspired by the works of Salvador Dalí.',
+  'A detailed illustration of a dragon perched on a rocky cliff overlooking a vast valley, with scales shimmering in the sunlight and smoke billowing from its nostrils.',
+  'A low poly rendering of a lush, vibrant jungle with a hidden waterfall and ancient ruins.',
+  'A isometric view of a fantasy tavern filled with adventurers, with a roaring fireplace, wooden tables, and a bard playing a lute.',
+  'A cinematic shot of a lone astronaut floating in the vastness of space, with Earth visible in the distance and stars twinkling in the darkness.',
+  'A macro photograph of a butterfly wing, with intricate patterns and vibrant colors visible in sharp detail.',
+  'A digital painting of a phoenix rising from ashes, with fiery wings and a determined expression.',
+  'A close up of a human eye reflecting a galaxy.',
+  'A photorealistic image of a vintage pocket watch, with intricate gears and a polished surface.',
 ];
 
 const formSchema = z.object({
@@ -59,6 +71,7 @@ export default function ImageGenerator() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
+  const [generatedSeed, setGeneratedSeed] = useState<number | null>(null);
 
   // Initialize with an empty array to prevent hydration mismatch
   const [examplePrompts, setExamplePrompts] = useState<string[]>([]);
@@ -139,6 +152,11 @@ export default function ImageGenerator() {
     // Save the prompt for display
     setGeneratedPrompt(data.prompt);
 
+    // Save the seed for display
+    if (result.seed !== undefined) {
+      setGeneratedSeed(result.seed);
+    }
+
     // Extract the base64 image data from the response
     if (result.image) {
       // Subtract credits after successful generation
@@ -211,7 +229,7 @@ export default function ImageGenerator() {
                     onClick={refreshExamplePrompts}
                     className='h-8 px-2 hover:cursor-pointer'
                   >
-                    <RefreshCw className='mr-1 h-3.5 w-3.5' />
+                    <RefreshCw className='h-3.5 w-3.5' />
                     <span className='text-xs'>Refresh</span>
                   </Button>
                 </div>
@@ -223,10 +241,10 @@ export default function ImageGenerator() {
                         key={index}
                         type='button'
                         variant='outline'
-                        className='h-auto justify-start px-3 py-2 text-left text-xs whitespace-normal hover:cursor-pointer'
+                        className='h-full px-3 py-2 text-left text-sm whitespace-normal hover:cursor-pointer'
                         onClick={() => selectExamplePrompt(prompt)}
                       >
-                        <span className='line-clamp-2'>{prompt}</span>
+                        <span>{prompt}</span>
                       </Button>
                     ))}
 
@@ -244,10 +262,8 @@ export default function ImageGenerator() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='flex items-center gap-1'>
-                      Prompt{' '}
-                      <Badge variant='outline' className='ml-1 font-normal'>
-                        required
-                      </Badge>
+                      Prompt
+                      <span className='text-destructive font-black'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -389,18 +405,19 @@ export default function ImageGenerator() {
                   />
                   <div className='bg-background group-hover:bg-background/80 absolute inset-0 flex items-center justify-center rounded-lg opacity-0 transition-all group-hover:opacity-100'>
                     <Button variant='default' className='hover:cursor-pointer' onClick={handleDownload}>
-                      <Download className='mr-2 h-4 w-4' /> Download
+                      <Download className='h-4 w-4' /> Download
                     </Button>
                   </div>
                 </div>
-                <div className='bg-muted/50 mt-4 w-full rounded-md p-3'>
+                <div className='bg-muted/50 mt-4 w-full space-y-2 rounded-md p-3'>
                   <p className='text-sm break-words'>
                     <span className='font-semibold'>Prompt:</span> &quot;{generatedPrompt}&quot;
                   </p>
-                  <div className='text-muted-foreground xs:flex-row xs:justify-between mt-2 flex flex-col gap-1 text-xs'>
-                    <span>Quality Level: {watchedSteps} • Model: Flux-1-Schnell</span>
-                    <span>Cost: {currentCreditCost} credits</span>
-                  </div>
+                  {generatedSeed !== null && (
+                    <p className='text-sm'>
+                      <span className='font-semibold'>Seed:</span> {generatedSeed}
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -40,13 +40,15 @@ export async function POST(req: NextRequest) {
     const stepsStr = formData.get('steps')?.toString() || '4';
     const steps = Math.min(Math.max(parseInt(stepsStr, 10) || 4, 1), 8); // Ensure between 1-8
 
-    // console.log('Generating image with prompt:', prompt, 'steps:', steps);
+    // Generate a random seed: 0 ≤ seed < 18446744073709552000
+    const seed = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
     // Use type assertion to handle the response
     const run = (await client.ai.run(model, {
       account_id: accountId,
       prompt: prompt,
       num_steps: steps,
+      seed: seed,
     })) as unknown as FluxImageResponse;
 
     // Check if the response contains an image
@@ -58,6 +60,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       image: `data:image/png;charset=utf-8;base64,${run.image}`,
       userId: session.user.id, // Include user ID for balance processing on client
+      seed: seed, // Include the seed in the response
     });
   } catch (error) {
     console.error('Image generation error:', error);
