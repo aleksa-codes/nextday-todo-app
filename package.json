@@ -35,7 +35,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-query": "^5.69.0",
-    "better-auth": "^1.2.3",
+    "better-auth": "^1.2.5-beta.5",
     "better-auth-harmony": "^1.2.4",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",

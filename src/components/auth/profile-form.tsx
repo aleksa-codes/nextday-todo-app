@@ -98,19 +98,21 @@ export function ProfileForm({ session }: ProfileFormProps) {
     loadAccounts();
   }, []);
 
-  async function loadAccounts() {
+  const loadAccounts = async () => {
     try {
-      const response = await authClient.listAccounts();
-      const transformedAccounts =
-        response.data?.map((account) => ({
-          id: account.id,
-          providerId: account.provider as Provider,
-        })) || [];
-      setAccounts(transformedAccounts);
-    } catch {
-      toast.error('Failed to load accounts');
+      const { data } = await authClient.listAccounts();
+      setAccounts(
+        data?.map(({ accountId, provider }) => ({
+          id: accountId,
+          providerId: provider as Provider,
+        })) || [],
+      );
+    } catch (error) {
+      toast.error('Failed to load accounts', {
+        description: error instanceof Error ? error.message : undefined,
+      });
     }
-  }
+  };
 
   async function handleLinkAccount(provider: Provider) {
     try {
@@ -145,8 +147,11 @@ export function ProfileForm({ session }: ProfileFormProps) {
   async function handleUnlinkAccount(provider: Provider) {
     try {
       setIsUnlinking(provider);
+
+      const unlinkAccountId = accounts.find((account) => account.providerId === provider)?.id;
+
       await authClient.unlinkAccount(
-        { providerId: provider },
+        { providerId: provider, accountId: unlinkAccountId! },
         {
           onSuccess: () => {
             toast.success(`Successfully unlinked ${provider} account`);
