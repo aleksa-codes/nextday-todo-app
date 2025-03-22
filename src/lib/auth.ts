@@ -67,12 +67,6 @@ export const auth = betterAuth({
         defaultValue: 100,
         input: false,
       },
-      // customerId: {
-      //   type: 'string',
-      //   required: false,
-      //   defaultValue: '',
-      //   input: false,
-      // },
     },
     changeEmail: {
       enabled: true,
@@ -123,7 +117,7 @@ export const auth = betterAuth({
   account: {
     accountLinking: {
       // enabled: true,
-      // trustedProviders: ['github'],
+      // trustedProviders: ['github', 'google'],
       allowDifferentEmails: true,
     },
   },
@@ -147,12 +141,6 @@ export const auth = betterAuth({
       checkout: {
         enabled: true,
         products: [],
-        // products: [
-        //   {
-        //     productId: '95b5f8d6-f0a1-4103-9dff-7b2103f29f25',
-        //     slug: 'pro',
-        //   },
-        // ],
         successUrl: '/success?checkout_id={CHECKOUT_ID}',
       },
     }),
