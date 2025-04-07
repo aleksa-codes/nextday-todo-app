@@ -60,7 +60,7 @@ const formSchema = z.object({
     .max(2048, {
       message: 'Prompt must be less than 2048 characters.',
     }),
-  steps: z.number().int().min(1).max(8).default(4),
+  steps: z.number().int().min(1).max(8),
 });
 
 type FormValues = z.infer<typeof formSchema>;
