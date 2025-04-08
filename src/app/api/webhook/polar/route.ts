@@ -18,7 +18,7 @@ export const POST = Webhooks({
   },
 
   // Triggered when a new order is successfully created
-  onOrderCreated: async (payload) => {
+  onOrderPaid: async (payload) => {
     console.log('New order created:', payload);
     try {
       const product = await polar.products.get({
