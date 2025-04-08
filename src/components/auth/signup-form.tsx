@@ -131,7 +131,7 @@ export function SignUpForm() {
           </p>
           <div className='flex flex-col gap-2'>
             <Button variant='outline' asChild>
-              <Link href='/auth/signin'>Go to sign in</Link>
+              <Link href='/signin'>Go to sign in</Link>
             </Button>
           </div>
         </CardContent>
