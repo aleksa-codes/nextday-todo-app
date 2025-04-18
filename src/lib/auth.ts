@@ -64,7 +64,7 @@ export const auth = betterAuth({
       balance: {
         type: 'number',
         required: false,
-        defaultValue: 100,
+        defaultValue: 320,
         input: false,
       },
     },

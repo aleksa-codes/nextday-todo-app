@@ -205,10 +205,11 @@ export default function ImageGenerator() {
         <CardHeader className='bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30'>
           <div className='flex items-center gap-2'>
             <Sparkles className='text-chart-2 h-5 w-5' />
-            <CardTitle>AI Image Generator</CardTitle>
+            <CardTitle>AI Image Generator (testing credits)</CardTitle>
           </div>
           <CardDescription>
-            Create stunning images with Cloudflare AI by describing what you want to see.
+            Create stunning images with Flux powered by Cloudflare AI, describe your vision and let the AI bring it to
+            life.
           </CardDescription>
         </CardHeader>
 
