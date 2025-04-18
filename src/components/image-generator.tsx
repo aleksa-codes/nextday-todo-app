@@ -204,7 +204,7 @@ export default function ImageGenerator() {
       <Card className='overflow-hidden'>
         <CardHeader className='bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30'>
           <div className='flex items-center gap-2'>
-            <Sparkles className='h-5 w-5 text-blue-500' />
+            <Sparkles className='text-chart-2 h-5 w-5' />
             <CardTitle>AI Image Generator</CardTitle>
           </div>
           <CardDescription>
@@ -219,7 +219,7 @@ export default function ImageGenerator() {
               <div className='space-y-3'>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-1.5'>
-                    <Lightbulb className='h-4 w-4 text-amber-500' />
+                    <Lightbulb className='text-warning h-4 w-4' />
                     <span className='text-sm font-medium'>Example Prompts</span>
                   </div>
                   <Button

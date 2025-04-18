@@ -243,7 +243,7 @@ export function SignInForm() {
           <Separator className='w-full' />
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background text-muted-foreground px-2'>or</span>
+          <span className='bg-card text-muted-foreground px-2'>or</span>
         </div>
       </div>
 

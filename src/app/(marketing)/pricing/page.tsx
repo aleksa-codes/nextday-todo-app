@@ -56,8 +56,8 @@ export default async function PricingPage() {
       </section>
 
       {/* Pricing plans */}
-      <PricingSection products={result.items} />
       <CreditsSection products={result.items} />
+      <PricingSection products={result.items} />
 
       {/* Comparison Table */}
       <section className='mt-10 w-full max-w-5xl'>

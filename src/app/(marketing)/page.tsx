@@ -48,7 +48,7 @@ export default async function Home() {
     <div className='flex w-full flex-col items-center justify-center gap-16'>
       {/* Hero Section */}
       <section className='flex w-full flex-col items-center justify-center gap-8 pt-12 md:pt-24'>
-        <div className='absolute inset-0 -z-10 h-full w-full bg-white dark:bg-neutral-950'>
+        <div className='bg-background absolute inset-0 -z-10 h-full w-full'>
           <div className='absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)]'></div>
         </div>
 
