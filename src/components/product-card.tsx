@@ -42,7 +42,7 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
 
   const checkoutUrl = (() => {
     const params = new URLSearchParams({
-      productId: product.id,
+      products: product.id,
     });
     return `api/auth/checkout?${params.toString()}`;
   })();

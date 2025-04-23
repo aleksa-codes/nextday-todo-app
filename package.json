@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
-    "@polar-sh/better-auth": "^0.1.0",
+    "@polar-sh/better-auth": "^0.1.1",
     "@polar-sh/nextjs": "^0.4.0",
     "@polar-sh/sdk": "^0.32.11",
     "@radix-ui/react-accordion": "^1.2.8",
@@ -52,7 +52,7 @@
     "postgres": "^3.4.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-hook-form": "^7.56.0",
+    "react-hook-form": "^7.56.1",
     "resend": "^4.4.0",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",

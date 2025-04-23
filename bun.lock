@@ -5,7 +5,7 @@
       "name": "nextday-todo-app",
       "dependencies": {
         "@hookform/resolvers": "^5.0.1",
-        "@polar-sh/better-auth": "^0.1.0",
+        "@polar-sh/better-auth": "^0.1.1",
         "@polar-sh/nextjs": "^0.4.0",
         "@polar-sh/sdk": "^0.32.11",
         "@radix-ui/react-accordion": "^1.2.8",
@@ -42,7 +42,7 @@
         "postgres": "^3.4.5",
         "react": "19.0.0",
         "react-dom": "19.0.0",
-        "react-hook-form": "^7.56.0",
+        "react-hook-form": "^7.56.1",
         "resend": "^4.4.0",
         "sonner": "^2.0.3",
         "tailwind-merge": "^3.2.0",
@@ -318,7 +318,7 @@
 
     "@polar-sh/adapter-utils": ["@polar-sh/adapter-utils@0.2.0", "", { "dependencies": { "@polar-sh/sdk": "^0.32.11" } }, "sha512-dSP4E8BgHyaGevYAaTRlNW8rJjR91GXP7InV2+WZ2je2+Oq8PJKo7sLWbpkkJp9zmRx1I88f76rk0XmCY8Aivg=="],
 
-    "@polar-sh/better-auth": ["@polar-sh/better-auth@0.1.0", "", { "dependencies": { "zod": "^3.24.2" }, "peerDependencies": { "@polar-sh/sdk": "^0.32.11", "better-auth": "^1.2.0" } }, "sha512-Gw67CoLoPIelwpa+BR7cMZb/i8MJP2g2E93MhEl26OuWGt8xNbAqzXasDoyUgZQ/r6ZwwdYPRzUqMWmwnRTEqQ=="],
+    "@polar-sh/better-auth": ["@polar-sh/better-auth@0.1.1", "", { "dependencies": { "zod": "^3.24.2" }, "peerDependencies": { "@polar-sh/sdk": "^0.32.11", "better-auth": "^1.2.0" } }, "sha512-+7vLpMCDwzBS87CUXsFb9ItOWMu/zkaJ0Hzghzi8Ejf+sBEawArE3kguChLmsTO2t0/Z4+NiQbbSMqND+9jwSg=="],
 
     "@polar-sh/nextjs": ["@polar-sh/nextjs@0.4.0", "", { "dependencies": { "@polar-sh/adapter-utils": "0.2.0", "@polar-sh/sdk": "^0.32.11" }, "peerDependencies": { "next": "^15.0.0 || ^15.2.0-canary.*" } }, "sha512-D7UibCAo5mUnaNvD6/81PZtQkw44x3ga0lMtPNxbwO7t7LonwSiyKEBiwtgLyxErSvUTnevvay9Hone9t4KRxg=="],
 
@@ -1096,7 +1096,7 @@
 
     "react-dom": ["react-dom@19.0.0", "", { "dependencies": { "scheduler": "^0.25.0" }, "peerDependencies": { "react": "^19.0.0" } }, "sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ=="],
 
-    "react-hook-form": ["react-hook-form@7.56.0", "", { "peerDependencies": { "react": "^16.8.0 || ^17 || ^18 || ^19" } }, "sha512-U2QQgx5z2Y8Z0qlXv3W19hWHJgfKdWMz0O/osuY+o+CYq568V2R/JhzC6OAXfR8k24rIN0Muan2Qliaq9eKs/g=="],
+    "react-hook-form": ["react-hook-form@7.56.1", "", { "peerDependencies": { "react": "^16.8.0 || ^17 || ^18 || ^19" } }, "sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ=="],
 
     "react-is": ["react-is@16.13.1", "", {}, "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="],
 
