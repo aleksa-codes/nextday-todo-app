@@ -9,6 +9,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { authClient } from '@/lib/auth-client';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import CustomerPortalBtn from '@/components/customer-portal-btn';
 
 export default async function BillingPage() {
   const { data: customerState } = await authClient.customer.state({
@@ -180,12 +181,7 @@ export default async function BillingPage() {
       </CardContent>
       <CardFooter className='bg-muted/40 flex flex-col items-start space-y-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0'>
         <p className='text-muted-foreground text-sm'>Need to update payment details or manage your subscription?</p>
-        <Button asChild>
-          <Link href='/api/auth/portal'>
-            <CreditCard className='mr-2 h-4 w-4' />
-            Open Customer Portal
-          </Link>
-        </Button>
+        <CustomerPortalBtn />
       </CardFooter>
     </Card>
   );
