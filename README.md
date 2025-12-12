@@ -1,6 +1,6 @@
 # NextDay Todo App - Full-Stack SaaS Starter
 
-NextDay is more than just a todo app - it's a production-ready starter template for building modern SaaS applications. Built with Next.js 15, it provides a solid foundation with all the essential features you need to kickstart your next SaaS project:
+NextDay is more than just a todo app - it's a production-ready starter template for building modern SaaS applications. Built with Next.js 16, it provides a solid foundation with all the essential features you need to kickstart your next SaaS project:
 
 - 🔒 Authentication with Better Auth
 - 💳 Payments infrastructure with Polar
@@ -32,7 +32,7 @@ This project serves as a reference implementation and starting point for future 
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Database**: PostgreSQL with [Drizzle ORM](https://orm.drizzle.team/)
 - **Authentication**: [Better Auth](https://www.better-auth.com/)

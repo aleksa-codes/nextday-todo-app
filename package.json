@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md,css,html,yaml}\"",
+    "format": "prettier --write .",
     "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db:migrate": "node -r esbuild-register ./src/db/migrate.ts",
     "db:push": "drizzle-kit push --config=drizzle.config.ts",
