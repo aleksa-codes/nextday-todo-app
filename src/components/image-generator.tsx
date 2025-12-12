@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'motion/react';
@@ -91,8 +91,8 @@ export default function ImageGenerator() {
   });
 
   // Watch form values for reactive updates
-  const watchedPrompt = form.watch('prompt');
-  const watchedSteps = form.watch('steps');
+  const watchedPrompt = useWatch({ control: form.control, name: 'prompt' });
+  const watchedSteps = useWatch({ control: form.control, name: 'steps' });
 
   // Get random prompts from the example list
   function getRandomPrompts(prompts: string[], count: number): string[] {
@@ -102,6 +102,7 @@ export default function ImageGenerator() {
 
   // Use useEffect to set the example prompts on client-side only
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setExamplePrompts(getRandomPrompts(EXAMPLE_PROMPTS, 3));
     setIsClient(true);
   }, []);

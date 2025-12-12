@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function PremiumFeaturesPage() {
   const state = await auth.api
-    .polarCustomerState({
+    .state({
       headers: await headers(),
     })
     .catch(() => {

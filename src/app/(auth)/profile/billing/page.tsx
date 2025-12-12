@@ -12,7 +12,7 @@ import { redirect } from 'next/navigation';
 
 export default async function BillingPage() {
   const state = await auth.api
-    .polarCustomerState({
+    .state({
       headers: await headers(),
     })
     .catch(() => {

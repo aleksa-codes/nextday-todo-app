@@ -8,7 +8,7 @@ const AUTH_ROUTES = ['/signin', '/signup', '/reset-password', '/goodbye'];
 const isPublicRoute = (pathname: string) => PUBLIC_ROUTES.includes(pathname);
 const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const sessionCookie = getSessionCookie(request);
 

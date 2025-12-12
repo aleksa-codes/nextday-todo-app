@@ -7,7 +7,7 @@ import * as schema from '@/db/schema/auth';
 import { sendEmail } from '@/lib/email';
 import { getURL } from '@/lib/utils';
 import { APIError } from 'better-auth/api';
-import { polar } from '@polar-sh/better-auth';
+import { polar, checkout, portal } from '@polar-sh/better-auth';
 import { polar as client } from '@/lib/polar';
 
 export const auth = betterAuth({
@@ -137,12 +137,13 @@ export const auth = betterAuth({
     polar({
       client,
       createCustomerOnSignUp: true,
-      enableCustomerPortal: true,
-      checkout: {
-        enabled: true,
-        products: [],
-        successUrl: '/success?checkout_id={CHECKOUT_ID}',
-      },
+      use: [
+        checkout({
+          successUrl: '/success?checkout_id={CHECKOUT_ID}',
+          authenticatedUsersOnly: true,
+        }),
+        portal(),
+      ],
     }),
   ],
 });

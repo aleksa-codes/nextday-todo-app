@@ -79,7 +79,7 @@ export function SignInForm() {
 
     try {
       setIsEmailLoading(true);
-      await authClient.forgetPassword({
+      await authClient.requestPasswordReset({
         email,
         redirectTo: '/reset-password',
       });

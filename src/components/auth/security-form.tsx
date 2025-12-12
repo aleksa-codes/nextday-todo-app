@@ -168,7 +168,7 @@ export function SecurityForm({ session, activeSessions }: SecurityFormProps) {
   async function handleForgotPassword(values: z.infer<typeof resetPasswordSchema>) {
     try {
       setIsLoading(true);
-      await authClient.forgetPassword({
+      await authClient.requestPasswordReset({
         email: values.email,
         redirectTo: '/reset-password',
       });

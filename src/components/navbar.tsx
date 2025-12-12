@@ -32,11 +32,66 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { useBalance, useSubscription } from '@/lib/mutations';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+
+const themeOptions = [
+  { value: 'light', label: 'Light', icon: <Sun className='h-4 w-4' /> },
+  { value: 'dark', label: 'Dark', icon: <Moon className='h-4 w-4' /> },
+  { value: 'system', label: 'System', icon: <Laptop className='h-4 w-4' /> },
+];
+
+interface ThemeDropdownContentProps {
+  theme: string | undefined;
+  setTheme: (theme: string) => void;
+}
+
+function ThemeDropdownContent({ theme, setTheme }: ThemeDropdownContentProps) {
+  return (
+    <>
+      <DropdownMenuLabel className='px-2 py-1.5 text-sm font-semibold'>Theme</DropdownMenuLabel>
+      {themeOptions.map((option) => (
+        <DropdownMenuItem key={option.value} className='cursor-pointer' onClick={() => setTheme(option.value)}>
+          {option.icon}
+          <span className='ml-2'>{option.label}</span>
+          {theme === option.value && <Check className='ml-auto h-4 w-4' />}
+        </DropdownMenuItem>
+      ))}
+    </>
+  );
+}
+
+interface MobileThemeOptionsProps {
+  theme: string | undefined;
+  setTheme: (theme: string) => void;
+}
+
+function MobileThemeOptions({ theme, setTheme }: MobileThemeOptionsProps) {
+  return (
+    <div className='px-6 py-2'>
+      <p className='text-muted-foreground mb-2 text-xs font-medium'>Theme</p>
+      <div className='space-y-1'>
+        {themeOptions.map((option) => (
+          <button
+            key={option.value}
+            onClick={() => setTheme(option.value)}
+            className={cn(
+              'text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-sm',
+              theme === option.value && 'text-primary font-medium',
+            )}
+          >
+            {option.icon}
+            <span>{option.label}</span>
+            {theme === option.value && <Check className='ml-auto h-3.5 w-3.5' />}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Navbar() {
   const { data: session, isPending } = authClient.useSession();
@@ -51,7 +106,8 @@ export function Navbar() {
   // Provide a fallback value if data is undefined
   const hasActiveSubscription = !!subscriptionData?.hasActiveSubscription;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -115,50 +171,6 @@ export function Navbar() {
       external: true,
     },
   ];
-
-  // Theme options
-  const themeOptions = [
-    { value: 'light', label: 'Light', icon: <Sun className='h-4 w-4' /> },
-    { value: 'dark', label: 'Dark', icon: <Moon className='h-4 w-4' /> },
-    { value: 'system', label: 'System', icon: <Laptop className='h-4 w-4' /> },
-  ];
-
-  // Reusable Theme Dropdown Content
-  const ThemeDropdownContent = () => (
-    <>
-      <DropdownMenuLabel className='px-2 py-1.5 text-sm font-semibold'>Theme</DropdownMenuLabel>
-      {themeOptions.map((option) => (
-        <DropdownMenuItem key={option.value} className='cursor-pointer' onClick={() => setTheme(option.value)}>
-          {option.icon}
-          <span className='ml-2'>{option.label}</span>
-          {theme === option.value && <Check className='ml-auto h-4 w-4' />}
-        </DropdownMenuItem>
-      ))}
-    </>
-  );
-
-  // Reusable Mobile Theme Options
-  const MobileThemeOptions = () => (
-    <div className='px-6 py-2'>
-      <p className='text-muted-foreground mb-2 text-xs font-medium'>Theme</p>
-      <div className='space-y-1'>
-        {themeOptions.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => setTheme(option.value)}
-            className={cn(
-              'text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-sm',
-              theme === option.value && 'text-primary font-medium',
-            )}
-          >
-            {option.icon}
-            <span>{option.label}</span>
-            {theme === option.value && <Check className='ml-auto h-3.5 w-3.5' />}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <nav className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur-sm'>
@@ -274,7 +286,7 @@ export function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end'>
-                  <ThemeDropdownContent />
+                  <ThemeDropdownContent theme={theme} setTheme={setTheme} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -350,7 +362,7 @@ export function Navbar() {
                 {/* Settings Section - Removed Profile from here */}
                 <div className='mt-4 border-t pt-2'>
                   {/* Theme Options */}
-                  <MobileThemeOptions />
+                  <MobileThemeOptions theme={theme} setTheme={setTheme} />
                 </div>
               </div>
 

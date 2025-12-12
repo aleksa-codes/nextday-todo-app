@@ -102,9 +102,9 @@ export function ProfileForm({ session }: ProfileFormProps) {
     try {
       const { data } = await authClient.listAccounts();
       setAccounts(
-        data?.map(({ accountId, provider }) => ({
+        data?.map(({ accountId, providerId }) => ({
           id: accountId,
-          providerId: provider as Provider,
+          providerId: providerId as Provider,
         })) || [],
       );
     } catch (error) {

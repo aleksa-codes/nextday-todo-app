@@ -21,10 +21,6 @@ export const POST = Webhooks({
   onOrderPaid: async (payload) => {
     console.log('New order created:', payload);
     try {
-      const product = await polar.products.get({
-        id: payload.data.productId,
-      });
-
       const userId = payload.data.customer.externalId;
 
       if (!userId) {
@@ -32,10 +28,10 @@ export const POST = Webhooks({
         return;
       }
 
-      const creditsToAdd = product.metadata.credits as number | 0;
+      const creditsToAdd = payload.data.product?.metadata.credits as number | 0;
 
       if (!creditsToAdd || isNaN(creditsToAdd)) {
-        console.error('Invalid credits value in product metadata:', product.metadata);
+        console.error('Invalid credits value in product metadata:', payload.data.product?.metadata.credits);
         return;
       }
 

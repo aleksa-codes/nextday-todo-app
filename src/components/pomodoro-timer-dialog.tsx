@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -99,8 +99,9 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
   }, [isRunning]);
 
   // Reset timer when dialog opens/closes
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTimeLeft(duration * 60);
       setIsRunning(false);
       completedRef.current = false;
@@ -108,8 +109,9 @@ export function PomodoroTimerDialog({ isOpen, onClose, onComplete, todoTitle }: 
   }, [isOpen, duration]);
 
   // Initialize quote when dialog opens
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentQuote(MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)]);
       setShowQuote(true);
     }
