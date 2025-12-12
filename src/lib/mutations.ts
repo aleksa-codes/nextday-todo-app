@@ -58,33 +58,6 @@ export function useSubtractBalance() {
   });
 }
 
-// Subscription hook - must use client-side fetch
-export function useSubscription() {
-  return useQuery({
-    queryKey: ['subscription'],
-    queryFn: async () => {
-      try {
-        const state: CustomerState = await fetch('/api/auth/state').then((res) => res.json());
-
-        if (!state || !state.activeSubscriptions?.length) {
-          return { hasActiveSubscription: false };
-        }
-
-        return {
-          hasActiveSubscription: true,
-          state,
-        };
-      } catch (error) {
-        console.error('Error fetching subscription status:', error);
-        return { hasActiveSubscription: false };
-      }
-    },
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-    refetchOnWindowFocus: false,
-  });
-}
-
 // Todo queries
 export function useTodos() {
   return useQuery({

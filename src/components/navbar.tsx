@@ -33,10 +33,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useEffect, useState, useLayoutEffect } from 'react';
-import { useBalance, useSubscription } from '@/lib/mutations';
+import { useBalance } from '@/lib/mutations';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { type CustomerState } from '@polar-sh/sdk/models/components/customerstate';
 
 const themeOptions = [
   { value: 'light', label: 'Light', icon: <Sun className='h-4 w-4' /> },
@@ -100,11 +101,18 @@ export function Navbar() {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { data: balance, isLoading: isBalanceLoading } = useBalance();
-  const { data: subscriptionData } = useSubscription();
   const [isOpen, setIsOpen] = useState(false);
+  const [customerState, setCustomerState] = useState<CustomerState | null>(null);
 
-  // Provide a fallback value if data is undefined
-  const hasActiveSubscription = !!subscriptionData?.hasActiveSubscription;
+  useEffect(() => {
+    const fetchCustomerState = async () => {
+      const { data } = await authClient.customer.state();
+      setCustomerState(data);
+    };
+    fetchCustomerState();
+  }, []);
+
+  const hasActiveSubscription = customerState?.activeSubscriptions && customerState.activeSubscriptions.length > 0;
 
   useLayoutEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -173,7 +181,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur-sm'>
+    <nav className='bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur-sm'>
       <div className='container flex h-16 items-center justify-between'>
         <div className='flex items-center space-x-4 md:space-x-8'>
           <Link href='/' className='flex items-center space-x-2'>
@@ -299,7 +307,7 @@ export function Navbar() {
                 <Menu className='h-5 w-5' />
               </Button>
             </SheetTrigger>
-            <SheetContent side='right' className='flex w-[280px] flex-col p-0 sm:w-[320px]'>
+            <SheetContent side='right' className='flex w-70 flex-col p-0 sm:w-[320px]'>
               <SheetHeader className='p-6 pb-2'>
                 <SheetTitle className='flex items-center gap-2'>
                   <CheckSquare2 className='text-primary h-5 w-5' />
