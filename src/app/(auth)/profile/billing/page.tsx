@@ -6,26 +6,28 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { CreditCard, Calendar, Globe, AlertTriangle, RefreshCw, Clock, Sparkles, CheckCircle } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
-import { auth } from '@/lib/auth';
+import { authClient } from '@/lib/auth-client';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function BillingPage() {
-  const state = await auth.api
-    .state({
+  const { data: customerState } = await authClient.customer.state({
+    fetchOptions: {
       headers: await headers(),
-    })
-    .catch(() => {
-      redirect('/signin');
-    });
+    },
+  });
+
+  if (!customerState) {
+    redirect('/signin');
+  }
 
   // Check if user has an active subscription
-  const hasActiveSubscription = state.activeSubscriptions && state.activeSubscriptions.length > 0;
-  const subscription = hasActiveSubscription ? state.activeSubscriptions[0] : null;
+  const hasActiveSubscription = customerState.activeSubscriptions && customerState.activeSubscriptions.length > 0;
+  const subscription = hasActiveSubscription ? customerState.activeSubscriptions[0] : null;
 
   return (
     <Card className='overflow-hidden'>
-      <CardHeader className='from-primary/10 to-primary/5 bg-gradient-to-r'>
+      <CardHeader className='from-primary/10 to-primary/5 bg-linear-to-r'>
         <CardTitle className='flex items-center'>
           <CreditCard className='mr-2 h-5 w-5' />
           Subscription Management
@@ -142,15 +144,15 @@ export default async function BillingPage() {
                 <div className='bg-card/50 space-y-3 rounded-lg border p-4 backdrop-blur-sm'>
                   <div>
                     <span className='text-muted-foreground text-xs'>Account</span>
-                    <p className='font-medium'>{state.email}</p>
+                    <p className='font-medium'>{customerState.email}</p>
                   </div>
 
-                  {state.billingAddress?.country && (
+                  {customerState.billingAddress?.country && (
                     <div>
                       <span className='text-muted-foreground text-xs'>Billing Country</span>
                       <div className='flex items-center'>
                         <Globe className='mr-2 h-4 w-4' />
-                        <span>{state.billingAddress.country}</span>
+                        <span>{customerState.billingAddress.country}</span>
                       </div>
                     </div>
                   )}

@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Crown, CreditCard, Calendar, Check, Globe } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth';
+import { authClient } from '@/lib/auth-client';
 import { headers } from 'next/headers';
 
 export const metadata = {
@@ -12,17 +12,19 @@ export const metadata = {
 };
 
 export default async function PremiumFeaturesPage() {
-  const state = await auth.api
-    .state({
+  const { data: customerState } = await authClient.customer.state({
+    fetchOptions: {
       headers: await headers(),
-    })
-    .catch(() => {
-      redirect('/signin');
-    });
+    },
+  });
+
+  if (!customerState) {
+    redirect('/signin');
+  }
 
   // Check if user has an active subscription
-  const hasActiveSubscription = state.activeSubscriptions && state.activeSubscriptions.length > 0;
-  const subscription = hasActiveSubscription ? state.activeSubscriptions[0] : null;
+  const hasActiveSubscription = customerState.activeSubscriptions && customerState.activeSubscriptions.length > 0;
+  const subscription = hasActiveSubscription ? customerState.activeSubscriptions[0] : null;
 
   if (!subscription) {
     redirect('/pricing');
@@ -55,8 +57,8 @@ export default async function PremiumFeaturesPage() {
       </div>
 
       <div className='mb-8 flex flex-col items-center'>
-        <h2 className='text-xl font-semibold'>{state.name}</h2>
-        <p className='text-muted-foreground'>{state.email}</p>
+        <h2 className='text-xl font-semibold'>{customerState.name}</h2>
+        <p className='text-muted-foreground'>{customerState.email}</p>
         <Badge variant='outline' className='mt-2'>
           Premium Member
         </Badge>
@@ -94,12 +96,12 @@ export default async function PremiumFeaturesPage() {
                 <p className='text-muted-foreground'>{memberSince}</p>
               </div>
 
-              {state.billingAddress?.country && (
+              {customerState.billingAddress?.country && (
                 <div>
                   <h3 className='font-medium'>Billing Country</h3>
                   <div className='mt-1 flex items-center'>
                     <Globe className='text-muted-foreground mr-2 h-4 w-4' />
-                    <span className='text-muted-foreground'>{state.billingAddress.country}</span>
+                    <span className='text-muted-foreground'>{customerState.billingAddress.country}</span>
                   </div>
                 </div>
               )}
