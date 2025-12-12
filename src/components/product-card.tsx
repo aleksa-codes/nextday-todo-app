@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useLayoutEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { Product } from '@polar-sh/sdk/models/components/product';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import {
   getPriceValue,
   getMonthlyPriceFromYearly,
 } from '@/lib/product-utils';
+import { checkout, useSession } from '@/lib/auth-client';
 
 interface ProductCardProps {
   product: Product;
@@ -28,9 +29,12 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
   const isCredits = !product.recurringInterval;
 
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useLayoutEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+  const { data } = useSession();
+  const user = data?.user || null;
+
+  useEffect(() => {
     setMounted(true);
   }, []);
 
@@ -41,12 +45,23 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
     return 0;
   })();
 
-  const checkoutUrl = (() => {
-    const params = new URLSearchParams({
-      products: product.id,
-    });
-    return `api/auth/checkout?${params.toString()}`;
-  })();
+  const handleCheckout = async () => {
+    try {
+      setIsLoading(true);
+      await checkout({
+        products: [product.id],
+        fetchOptions: {
+          onError(e: { error: { message: string } }) {
+            throw new Error(e.error.message);
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Checkout failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className='h-full'>
@@ -57,12 +72,12 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
             'border-border hover:border-warning/50 hover:shadow-warning/5 transition-all duration-300 hover:shadow-lg',
           isCredits &&
             featured &&
-            'border-warning/50 from-warning/5 to-warning/10 shadow-warning/10 bg-gradient-to-br shadow-lg',
+            'border-warning/50 from-warning/5 to-warning/10 shadow-warning/10 bg-linear-to-br shadow-lg',
           !isCredits &&
             'border-border hover:border-primary/50 hover:shadow-primary/5 transition-all duration-300 hover:shadow-lg',
           !isCredits &&
             featured &&
-            'border-primary/50 from-primary/5 to-primary/10 shadow-primary/10 bg-gradient-to-br shadow-lg',
+            'border-primary/50 from-primary/5 to-primary/10 shadow-primary/10 bg-linear-to-br shadow-lg',
         )}
       >
         {featured && (
@@ -111,7 +126,7 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
               )}
             </div>
           </div>
-          <CardDescription className='min-h-[40px] text-sm leading-relaxed'>{product.description}</CardDescription>
+          <CardDescription className='min-h-10 text-sm leading-relaxed'>{product.description}</CardDescription>
 
           <div
             className={cn(
@@ -172,7 +187,7 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
               <li key={benefit.id} className='group/item flex items-start gap-x-3'>
                 <div
                   className={cn(
-                    'mt-0.5 flex-shrink-0 rounded-full p-0.5',
+                    'mt-0.5 shrink-0 rounded-full p-0.5',
                     isCredits
                       ? 'text-warning bg-warning/10 group-hover/item:bg-warning/20'
                       : 'text-primary bg-primary/10 group-hover/item:bg-primary/20',
@@ -194,41 +209,67 @@ export const ProductCard = ({ product, featured = false, monthlyProduct }: Produ
         </CardContent>
 
         <CardFooter className='px-6 pt-4 pb-6'>
-          <Button
-            className={cn(
-              'size-full p-0 text-sm font-medium transition-all duration-300',
-              featured && (isCredits ? 'bg-warning hover:bg-warning/90' : 'bg-primary hover:bg-primary/90'),
-            )}
-            variant={featured ? 'default' : 'outline'}
-            size='lg'
-            disabled={!mounted}
-          >
-            {!mounted ? (
-              <div className='flex items-center justify-center py-3'>
-                <Loader2 className='animate-spin' />
-                <span className='ml-2'>Loading...</span>
-              </div>
-            ) : (
-              <Link
-                prefetch={false}
-                href={checkoutUrl}
-                className='flex size-full items-center justify-center gap-2 py-3'
-              >
-                {isCredits ? (
-                  <>
-                    <Coins />
-                    Buy Credits Now
-                  </>
-                ) : (
-                  <>
-                    <ZapIcon />
-                    Subscribe Now
-                  </>
-                )}
-                <ArrowRight className='-translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100' />
+          {user ? (
+            <Button
+              className={cn(
+                'size-full p-0 text-sm font-medium transition-all duration-300',
+                featured && (isCredits ? 'bg-warning hover:bg-warning/90' : 'bg-primary hover:bg-primary/90'),
+              )}
+              variant={featured ? 'default' : 'outline'}
+              size='lg'
+              disabled={!mounted || isLoading}
+              onClick={handleCheckout}
+            >
+              {!mounted || isLoading ? (
+                <div className='flex items-center justify-center py-3'>
+                  <Loader2 className='animate-spin' />
+                  <span className='ml-2'>{isLoading ? 'Processing...' : 'Loading...'}</span>
+                </div>
+              ) : (
+                <span className='flex size-full items-center justify-center gap-2 py-3'>
+                  {isCredits ? (
+                    <>
+                      <Coins />
+                      Buy Now
+                    </>
+                  ) : (
+                    <>
+                      <ZapIcon />
+                      Subscribe Now
+                    </>
+                  )}
+                  <ArrowRight className='-translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100' />
+                </span>
+              )}
+            </Button>
+          ) : (
+            <Button
+              className={cn(
+                'size-full p-0 text-sm font-medium transition-all duration-300',
+                featured && (isCredits ? 'bg-warning hover:bg-warning/90' : 'bg-primary hover:bg-primary/90'),
+              )}
+              variant={featured ? 'default' : 'outline'}
+              size='lg'
+              asChild
+            >
+              <Link href='/login'>
+                <span className='flex size-full items-center justify-center gap-2 py-3'>
+                  {isCredits ? (
+                    <>
+                      <Coins />
+                      Buy Now
+                    </>
+                  ) : (
+                    <>
+                      <ZapIcon />
+                      Subscribe Now
+                    </>
+                  )}
+                  <ArrowRight className='-translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100' />
+                </span>
               </Link>
-            )}
-          </Button>
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </div>
