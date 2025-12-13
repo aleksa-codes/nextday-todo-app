@@ -5,7 +5,7 @@ import Cloudflare from 'cloudflare';
 
 export const maxDuration = 60;
 
-const model = '@cf/black-forest-labs/flux-1-schnell';
+const model = '@cf/black-forest-labs/flux-2-dev';
 
 // Define a custom interface for the image generation response
 // since the Cloudflare types don't include this model's response format

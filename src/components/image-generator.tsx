@@ -209,8 +209,8 @@ export default function ImageGenerator() {
             <CardTitle>AI Image Generator (testing credits)</CardTitle>
           </div>
           <CardDescription>
-            Create stunning images with Flux powered by Cloudflare AI, describe your vision and let the AI bring it to
-            life.
+            Create stunning images with Flux 2 Dev powered by Cloudflare AI, describe your vision and let the AI bring
+            it to life.
           </CardDescription>
         </CardHeader>
 
@@ -427,7 +427,7 @@ export default function ImageGenerator() {
         </CardContent>
         <CardFooter className='text-muted-foreground bg-muted/20 flex justify-between px-4 py-3 text-xs sm:px-6'>
           <p>Powered by Cloudflare AI</p>
-          <p>Using Flux-1-Schnell model</p>
+          <p>Using Flux-2-Dev model</p>
         </CardFooter>
       </Card>
     </div>
