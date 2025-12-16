@@ -1,5 +1,5 @@
 import { createAuthClient } from 'better-auth/react';
-import { polarClient } from '@polar-sh/better-auth/client';
+import { polarClient } from '@polar-sh/better-auth';
 import { inferAdditionalFields } from 'better-auth/client/plugins';
 import { toast } from 'sonner';
 import { getURL } from '@/lib/utils';
