@@ -1,4 +1,12 @@
-# NextDay Todo App - Full-Stack SaaS Starter
+> ## Archived Project
+>
+> This repository is archived, outdated, and no longer maintained.
+>
+> It remains available for reference purposes only. Some parts of the codebase may still be useful, but the project as a whole does not reflect current best practices or my latest work.
+>
+> I plan to release a more polished and up-to-date SaaS starter in the future.
+
+NextDay Todo App - Full-Stack SaaS Starter
 
 NextDay is more than just a todo app - it's a production-ready starter template for building modern SaaS applications. Built with Next.js 16, it provides a solid foundation with all the essential features you need to kickstart your next SaaS project:
 
